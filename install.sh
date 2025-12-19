@@ -97,6 +97,7 @@ install_packages() {
         brightnessctl # for brightness keys
         playerctl # for media keys
         networkmanager
+        power-profiles-daemon
     )
 
     log "Installing packages..."

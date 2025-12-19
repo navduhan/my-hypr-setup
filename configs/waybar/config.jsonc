@@ -18,6 +18,7 @@
     ],
     "modules-right": [
         "network",
+        "power-profiles-daemon",
         "pulseaudio",
         "battery",
         "tray",
@@ -59,6 +60,18 @@
             "on-click-backward": "tz_down",
             "on-scroll-up": "shift_up",
             "on-scroll-down": "shift_down"
+        }
+    },
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+        "tooltip": true,
+        "swap-icon-label": false,
+        "format-icons": {
+            "default": "",
+            "performance": "",
+            "balanced": "",
+            "power-saver": ""
         }
     },
     "battery": {
