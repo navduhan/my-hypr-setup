@@ -96,6 +96,7 @@ install_packages() {
         libnotify # for notify-send
         brightnessctl # for brightness keys
         playerctl # for media keys
+        networkmanager
     )
 
     log "Installing packages..."
@@ -118,19 +119,63 @@ backup_configs() {
 link_configs() {
     log "Linking new configurations..."
     
+    # 1. Configs that need content symlinking with exclusions (for theme switching)
+    #    We do NOT want to symlink the folder itself, but its contents, ignoring specific files.
+    declare -A SPECIAL_CONFIGS
+    SPECIAL_CONFIGS=( ["hypr"]="theme.conf hyprlock-theme.conf" ["waybar"]="style.css" ["rofi"]="theme.rasi" ["kitty"]="theme.conf" ["wlogout"]="layout style.css" )
+
     for config_path in "$CONFIGS_DIR"/*; do
         config_name=$(basename "$config_path")
-        target="${HOME}/.config/$config_name"
-        
-        # Ensure parent dir exists (though .config usually does)
-        mkdir -p "${HOME}/.config"
-        
-        # Remove if it exists (backup already ran, but just in case of re-run artifacts)
-        rm -rf "$target"
-        
-        ln -s "$config_path" "$target"
-        success "Linked $config_name -> $target"
+        target_dir="${HOME}/.config/$config_name"
+
+        # Check if it's a special config
+        if [[ -n "${SPECIAL_CONFIGS[$config_name]+_}" ]]; then
+            log "Processing special config: $config_name"
+            mkdir -p "$target_dir"
+            
+            # Get list of exclusions for this config
+            exclusions="${SPECIAL_CONFIGS[$config_name]}"
+            
+            # Loop through all files in the source config dir
+            for file_path in "$config_path"/*; do
+                file_name=$(basename "$file_path")
+                
+                # Check if file is in exclusions list
+                if [[ " $exclusions " =~ " $file_name " ]]; then
+                    log "  Skipping swappable file: $file_name"
+                    continue
+                fi
+                
+                # Symlink the file/folder
+                ln -sf "$file_path" "$target_dir/$file_name"
+            done
+            success "Linked contents of $config_name (excluding: $exclusions)"
+
+        else
+            # 2. Standard Configs: Symlink the entire directory
+            # Remove existing dir if it's a directory or symlink
+            if [ -d "$target_dir" ] || [ -L "$target_dir" ]; then
+                rm -rf "$target_dir"
+            fi
+            
+            ln -sf "$config_path" "$target_dir"
+            success "Linked $config_name -> $target_dir"
+        fi
     done
+}
+
+setup_initial_theme() {
+    log "Setting up initial theme (One Dark)..."
+    
+    # Use the switch script to set the initial theme
+    # This creates the missing symlinks for theme.conf, style.css, etc.
+    SWITCH_SCRIPT="$CONFIGS_DIR/hypr/scripts/switch_theme.sh"
+    
+    if [ -x "$SWITCH_SCRIPT" ]; then
+        "$SWITCH_SCRIPT" "one-dark"
+    else
+        warn "Theme switch script not found or executable. You may need to set the theme manually."
+    fi
 }
 
 # --- Main ---
@@ -144,6 +189,9 @@ backup_configs
 
 # 3. Symlink
 link_configs
+
+# 4. Initial Theme Setup
+setup_initial_theme
 
 log "Installation complete!"
 echo -e "${GREEN}Please restart Hyprland or your session to apply changes.${NC}"
