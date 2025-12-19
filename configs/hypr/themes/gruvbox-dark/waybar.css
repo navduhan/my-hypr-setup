@@ -1,0 +1,162 @@
+/* -----------------------------------------------------------------------------
+ * File: waybar.css
+ * Author: Naveen Duhan
+ * Description: Waybar styling for Gruvbox Dark.
+ * ----------------------------------------------------------------------------- */
+
+@define-color base #282828;
+@define-color mantle #1d2021;
+@define-color crust #1d2021;
+
+@define-color text #ebdbb2;
+@define-color subtext0 #d5c4a1;
+@define-color subtext1 #bdae93;
+
+@define-color surface0 #3c3836;
+@define-color surface1 #504945;
+@define-color surface2 #665c54;
+
+@define-color overlay0 #7c6f64;
+@define-color overlay1 #928374;
+@define-color overlay2 #a89984;
+
+@define-color blue #83a598;
+@define-color lavender #d3869b;
+@define-color sapphire #83a598;
+@define-color sky #8ec07c;
+@define-color teal #8ec07c;
+@define-color green #b8bb26;
+@define-color yellow #fabd2f;
+@define-color peach #fe8019;
+@define-color maroon #fb4934;
+@define-color red #fb4934;
+@define-color mauve #d3869b;
+@define-color pink #d3869b;
+@define-color flamingo #fe8019;
+@define-color rosewater #ebdbb2;
+
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 14px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: transparent;
+    color: @text;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: @text;
+    border-radius: 5px;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#workspaces button.active {
+    color: @blue;
+    background-color: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 -3px @blue;
+}
+
+#workspaces button.urgent {
+    background-color: @red;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratcher,
+#mpd,
+#custom-notification {
+    padding: 0 10px;
+    color: @text;
+    background-color: @base;
+    border-radius: 10px;
+    margin: 5px 2px;
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
+    padding: 0 5px;
+    background-color: @base;
+    border-radius: 10px;
+}
+
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
+
+#clock {
+    color: @yellow;
+}
+
+#battery {
+    color: @green;
+}
+
+#battery.charging, #battery.plugged {
+    color: @green;
+}
+
+#battery.critical:not(.charging) {
+    background-color: @red;
+    color: @base;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+label:focus {
+    background-color: #000000;
+}
+
+#network {
+    color: @mauve;
+}
+
+#network.disconnected {
+    color: @red;
+}
+
+#pulseaudio {
+    color: @blue;
+}
+
+#pulseaudio.muted {
+    color: @overlay0;
+}
+
+#tray {
+    background-color: @base;
+}

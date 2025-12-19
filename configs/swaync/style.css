@@ -1,0 +1,187 @@
+/* -----------------------------------------------------------------------------
+ * File: style.css
+ * Author: Naveen Duhan
+ * Description: SwayNC styling.
+ * ----------------------------------------------------------------------------- */
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+}
+
+.control-center .notification-row:focus,
+.control-center .notification-row:hover {
+    opacity: 1;
+    background: #1e1e2e;
+}
+
+.notification-row {
+    outline: none;
+    margin: 10px;
+    padding: 0;
+}
+
+.notification {
+    background: transparent;
+    padding: 0;
+    margin: 0px;
+}
+
+.notification-content {
+    background: #1e1e2e;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #181825;
+    margin: 0;
+}
+
+.close-button {
+    background: #f38ba8;
+    color: #1e1e2e;
+    text-shadow: none;
+    padding: 0;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.close-button:hover {
+    box-shadow: none;
+    background: #d20f39;
+    transition: all .2s ease-in-out;
+}
+
+.notification-action {
+    border: 2px solid #181825;
+    border-top: none;
+    border-radius: 5px;
+}
+
+.notification-default-action:hover,
+.notification-action:hover {
+    color: #cdd6f4;
+    background: #181825;
+}
+
+.notification-default-action {
+    border-radius: 5px;
+    margin: 0px;
+}
+
+.summary {
+    font-size: 16px;
+    font-weight: 700;
+    background: transparent;
+    color: #cdd6f4;
+    text-shadow: none;
+}
+
+.time {
+    font-size: 16px;
+    font-weight: 700;
+    background: transparent;
+    color: #cdd6f4;
+    text-shadow: none;
+    margin-right: 18px;
+}
+
+.body {
+    font-size: 15px;
+    font-weight: 400;
+    background: transparent;
+    color: #cdd6f4;
+    text-shadow: none;
+}
+
+.control-center {
+    background: rgba(30, 30, 46, 0.85);
+    border: 2px solid #181825;
+    border-radius: 10px;
+}
+
+.control-center-list {
+    background: transparent;
+}
+
+
+.floating-notifications {
+    background: transparent;
+}
+
+.blank-window {
+    background: alpha(black, 0.1);
+}
+
+.widget-title {
+    color: #cdd6f4;
+    background: #1e1e2e;
+    padding: 5px 10px;
+    margin: 10px 10px 5px 10px;
+    font-size: 1.5rem;
+    border-radius: 5px;
+}
+
+.widget-title>button {
+    font-size: 1rem;
+    color: #cdd6f4;
+    text-shadow: none;
+    background: #1e1e2e;
+    box-shadow: none;
+    border-radius: 5px;
+}
+
+.widget-title>button:hover {
+    background: #f38ba8;
+    color: #1e1e2e;
+}
+
+.widget-dnd {
+    background: #1e1e2e;
+    padding: 5px 10px;
+    margin: 10px 10px 5px 10px;
+    border-radius: 5px;
+    font-size: large;
+    color: #cdd6f4;
+}
+
+.widget-dnd>switch {
+    border-radius: 5px;
+    background: #181825;
+}
+
+.widget-dnd>switch:checked {
+    background: #f38ba8;
+    border: 1px solid #f38ba8;
+}
+
+.widget-dnd>switch slider {
+    background: #cdd6f4;
+    border-radius: 5px;
+}
+
+.widget-dnd>switch:checked slider {
+    background: #1e1e2e;
+    border-radius: 5px;
+}
+.widget-buttons-grid {
+    padding: 10px;
+    margin: 10px 10px 5px 10px;
+    border-radius: 5px;
+    background: #1e1e2e;
+}
+
+.widget-buttons-grid>flowbox>flowboxchild>button {
+    background: #1e1e2e;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 0px;
+    border: none;
+}
+
+.widget-buttons-grid>flowbox>flowboxchild>button:hover {
+    background: #f38ba8;
+    color: #1e1e2e;
+}
+
+.widget-buttons-grid>flowbox>flowboxchild>button label {
+    font-size: 1.5rem;
+}
