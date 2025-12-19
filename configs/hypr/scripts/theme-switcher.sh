@@ -5,7 +5,7 @@
 # Description: Rofi-based theme selector for SwayNC button integration.
 # -----------------------------------------------------------------------------
 
-DOTFILES_DIR="$HOME/Documents/my-hypr-setup"
+DOTFILES_DIR="$HOME/Downloads/my-hypr-setup"
 THEMES_DIR="$DOTFILES_DIR/configs/hypr/themes"
 SWITCH_SCRIPT="$DOTFILES_DIR/configs/hypr/scripts/switch_theme.sh"
 

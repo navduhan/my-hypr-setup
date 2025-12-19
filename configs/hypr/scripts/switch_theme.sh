@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 THEME="$1"
-DOTFILES_DIR="$HOME/Documents/my-hypr-setup"
+DOTFILES_DIR="$HOME/Downloads/my-hypr-setup"
 CONFIGS_DIR="$DOTFILES_DIR/configs"
 
 if [ -z "$THEME" ]; then
