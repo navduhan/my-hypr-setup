@@ -18,7 +18,7 @@ if [ -z "$themes" ]; then
 fi
 
 # Show Rofi menu
-selected=$(echo "$themes" | rofi -dmenu -p "Select Theme" -i -theme-str 'window {width: 400px;}')
+selected=$(echo "$themes" | rofi -dmenu -p "" -i -theme-str 'window {width: 400px;}')
 
 if [ -n "$selected" ]; then
     "$SWITCH_SCRIPT" "$selected"

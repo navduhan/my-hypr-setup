@@ -1,0 +1,281 @@
+@define-color base #2d353b;
+@define-color mantle #272e33;
+@define-color crust #21272b;
+@define-color text #d3c6aa;
+@define-color subtext0 #859289;
+@define-color subtext1 #9da9a0;
+@define-color surface0 #343f44;
+@define-color surface1 #3d484d;
+@define-color surface2 #475258;
+@define-color red #e67e80;
+@define-color blue #7fbbb3;
+@define-color yellow #dbbc7f;
+@define-color mauve #d699b6;
+@define-color lavender #b4befe;
+@define-color peach #e69875;
+
+/* ==================== SWAYNC STYLING ==================== */
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.control-center {
+    background: alpha(@base, 0.9);
+    border: 2px solid @surface0;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px alpha(black, 0.5);
+    backdrop-filter: blur(20px);
+    margin: 8px;
+    padding: 8px;
+}
+
+.control-center-list {
+    background: transparent;
+    padding: 4px;
+}
+
+.control-center-list-placeholder {
+    opacity: 0.5;
+}
+
+.floating-notifications {
+    background: transparent;
+}
+
+.blank-window {
+    background: transparent;
+}
+
+.notification-row {
+    outline: none;
+    margin: 4px 8px;
+    padding: 0;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+    background: alpha(@surface0, 0.4);
+    border-radius: 10px;
+}
+
+.notification {
+    background: transparent;
+    border-radius: 10px;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 2px 8px alpha(black, 0.3);
+}
+
+.notification-content {
+    background: alpha(@base, 0.95);
+    border-radius: 10px;
+    border: 1px solid alpha(@surface1, 0.4);
+    padding: 10px;
+    margin: 0;
+    transition: all 200ms ease;
+}
+
+.notification-content:hover {
+    background: @base;
+    border-color: @mauve;
+}
+
+.close-button {
+    background: @red;
+    color: @crust;
+    border-radius: 100%;
+    padding: 0px;
+    margin: 4px;
+    min-width: 16px;
+    min-height: 16px;
+    box-shadow: 0 2px 4px alpha(black, 0.3);
+    border: none;
+}
+
+.close-button:hover {
+    background: lighter(@red);
+    box-shadow: 0 0 6px @red;
+}
+
+.summary {
+    font-size: 12px;
+    font-weight: 800;
+    color: @text;
+    background: transparent;
+    text-shadow: none;
+    margin-bottom: 4px;
+}
+
+.time {
+    font-size: 10px;
+    font-weight: 600;
+    color: @subtext0;
+    background: transparent;
+    margin-right: 18px;
+}
+
+.body {
+    font-size: 11px;
+    font-weight: 500;
+    color: @subtext1;
+    background: transparent;
+}
+
+.widget-title {
+    background: alpha(@surface0, 0.6);
+    border-radius: 10px;
+    margin: 4px;
+    padding: 6px 10px;
+    color: @text;
+    font-size: 13px;
+    font-weight: 800;
+    border: 1px solid alpha(@surface1, 0.3);
+}
+
+.widget-title > button {
+    background: @red;
+    color: @crust;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    border: none;
+}
+
+.widget-dnd {
+    background: alpha(@surface0, 0.6);
+    border-radius: 10px;
+    margin: 4px;
+    padding: 6px 10px;
+    color: @text;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid alpha(@surface1, 0.3);
+}
+
+.widget-dnd > switch {
+    background: @surface1;
+    border-radius: 10px;
+}
+
+.widget-dnd > switch:checked {
+    background: @mauve;
+}
+
+.widget-dnd > switch slider {
+    background: @text;
+    border-radius: 10px;
+    min-width: 16px;
+    min-height: 16px;
+    margin: 2px;
+}
+
+.widget-buttons-grid {
+    background: alpha(@surface0, 0.6);
+    border-radius: 10px;
+    margin: 4px;
+    padding: 8px;
+    border: 1px solid alpha(@surface1, 0.3);
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    background: @surface1;
+    color: @text;
+    border-radius: 10px;
+    padding: 6px;
+    min-width: 40px;
+    min-height: 40px;
+    margin: 2px;
+    border: none;
+    font-size: 18px;
+}
+
+.widget-mpris {
+    background: alpha(@surface0, 0.6);
+    border-radius: 10px;
+    margin: 4px;
+    padding: 8px;
+    border: 1px solid alpha(@surface1, 0.3);
+}
+
+.widget-mpris-player {
+    background: alpha(@surface1, 0.4);
+    border-radius: 10px;
+    padding: 8px;
+    margin: 4px 0;
+}
+
+.widget-mpris-title {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.widget-mpris-subtitle {
+    font-size: 10px;
+}
+
+.widget-mpris > box > button {
+    border-radius: 100%;
+    padding: 6px;
+    min-width: 28px;
+    min-height: 28px;
+}
+
+.widget-volume, .widget-backlight {
+    background: alpha(@surface0, 0.6);
+    border-radius: 10px;
+    margin: 4px;
+    padding: 8px 12px;
+    border: 1px solid alpha(@surface1, 0.3);
+}
+
+.widget-volume > box > button {
+    background: transparent;
+    color: @blue;
+    border: none;
+    font-size: 16px;
+    padding: 0 8px 0 0;
+}
+
+.widget-backlight > label {
+    color: @yellow;
+    font-size: 16px;
+    padding: 0 8px 0 0;
+}
+
+.widget-volume scale trough, .widget-backlight scale trough {
+    background: alpha(@crust, 0.8);
+    border: 1px solid alpha(@surface1, 0.5);
+    border-radius: 10px;
+    min-height: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.widget-volume scale highlight {
+    background: linear-gradient(to right, @blue, @lavender);
+    border-radius: 10px;
+}
+
+.widget-backlight scale highlight {
+    background: linear-gradient(to right, @yellow, @peach);
+    border-radius: 10px;
+}
+
+.widget-volume scale slider, .widget-backlight scale slider {
+    background: @text;
+    border-radius: 50%;
+    min-width: 16px;
+    min-height: 16px;
+    margin: -3px 0;
+    box-shadow: 0 2px 4px alpha(black, 0.5);
+}
+
+.per-app-volume {
+    background: alpha(@surface1, 0.4);
+    border-radius: 10px;
+    padding: 4px 8px;
+    margin: 4px 0;
+}

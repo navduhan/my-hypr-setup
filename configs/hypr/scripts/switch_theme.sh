@@ -67,7 +67,18 @@ if [ -f "$THEME_DIR/hyprlock.conf" ]; then
     ln -sf "$THEME_DIR/hyprlock.conf" "$HOME/.config/hypr/hyprlock-theme.conf"
 fi
 
-# 4. Wallpaper (swww)
+# 7. SwayNC: Link style.css
+if [ -f "$THEME_DIR/swaync.css" ]; then
+    ln -sf "$THEME_DIR/swaync.css" "$HOME/.config/swaync/style.css"
+fi
+
+# 8. Neovim: Link theme.lua
+if [ -f "$THEME_DIR/nvim.lua" ]; then
+    mkdir -p "$HOME/.config/nvim/lua"
+    ln -sf "$THEME_DIR/nvim.lua" "$HOME/.config/nvim/lua/theme.lua"
+fi
+
+# 9. Wallpaper (swww)
 # Look for a wallpaper file in the theme dir
 WALLPAPER=$(find "$THEME_DIR" -type f \( -name "*.jpg" -o -name "*.png" \) | head -n 1)
 if [ -n "$WALLPAPER" ]; then

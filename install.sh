@@ -72,6 +72,7 @@ install_packages() {
 
     # List of packages to install
     PACKAGES=(
+        # Hyprland & Core
         hyprland
         waybar
         rofi-wayland
@@ -86,11 +87,18 @@ install_packages() {
         grim
         slurp
         wl-clipboard
+        wlogout
+        hyprpicker # color picker
+
+        # Fonts
         ttf-font-awesome
         ttf-jetbrains-mono-nerd
         noto-fonts-emoji
-        dolphin # file manager as requested in keybinds
-        wlogout
+
+        # Apps
+        dolphin # file manager
+
+        # System utilities
         blueman # bluetooth manager for SwayNC
         network-manager-applet # nm-connection-editor for SwayNC
         libnotify # for notify-send
@@ -98,6 +106,25 @@ install_packages() {
         playerctl # for media keys
         networkmanager
         power-profiles-daemon
+        fprintd # fingerprint scanner support
+        cava # audio visualizer
+
+        # Neovim & Dependencies
+        neovim
+        lazygit # git TUI (for nvim toggleterm)
+        ripgrep # for telescope live_grep
+        fd # for telescope find_files
+        fzf # fuzzy finder
+        npm # for LSP servers
+        python-pip # for python LSP
+        go # for go LSP
+        rust # for rust-analyzer
+        lua-language-server
+        stylua # lua formatter
+        prettier # js/ts/css formatter
+        shfmt # shell formatter
+        python-black # python formatter
+        python-isort # python import sorter
     )
 
     log "Installing packages..."
@@ -109,7 +136,7 @@ backup_configs() {
     log "Backing up existing configurations to $BACKUP_DIR..."
     mkdir -p "$BACKUP_DIR"
 
-    for config in hypr waybar rofi swaync kitty wlogout; do
+    for config in hypr waybar rofi swaync kitty wlogout nvim; do
         if [ -d "${HOME}/.config/$config" ]; then
             mv "${HOME}/.config/$config" "$BACKUP_DIR/"
             success "Backed up $config"
@@ -123,7 +150,8 @@ link_configs() {
     # 1. Configs that need content symlinking with exclusions (for theme switching)
     #    We do NOT want to symlink the folder itself, but its contents, ignoring specific files.
     declare -A SPECIAL_CONFIGS
-    SPECIAL_CONFIGS=( ["hypr"]="theme.conf hyprlock-theme.conf" ["waybar"]="style.css" ["rofi"]="theme.rasi" ["kitty"]="theme.conf" ["wlogout"]="layout style.css" )
+    SPECIAL_CONFIGS=( ["hypr"]="theme.conf hyprlock-theme.conf" ["waybar"]="style.css" ["rofi"]="theme.rasi" ["kitty"]="theme.conf" ["wlogout"]="layout style.css" ["swaync"]="style.css" )
+    # Note: nvim is NOT in SPECIAL_CONFIGS - it gets fully symlinked, and switch_theme.sh manages lua/theme.lua
 
     for config_path in "$CONFIGS_DIR"/*; do
         config_name=$(basename "$config_path")
@@ -195,4 +223,20 @@ link_configs
 setup_initial_theme
 
 log "Installation complete!"
-echo -e "${GREEN}Please restart Hyprland or your session to apply changes.${NC}"
+echo ""
+echo -e "${GREEN}══════════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}  Installation Complete!${NC}"
+echo -e "${GREEN}══════════════════════════════════════════════════════════════${NC}"
+echo ""
+echo -e "${BLUE}Next steps:${NC}"
+echo "  1. Restart Hyprland or log out and back in"
+echo "  2. Open Neovim - plugins will auto-install on first launch"
+echo "  3. Run :Mason in Neovim to install LSP servers"
+echo ""
+echo -e "${BLUE}Theme switching:${NC}"
+echo "  ~/.config/hypr/scripts/switch_theme.sh <theme-name>"
+echo ""
+echo -e "${BLUE}Available themes:${NC}"
+echo "  catppuccin-mocha, catppuccin-latte, tokyo-night, dracula,"
+echo "  nord, gruvbox-dark, everforest, rose-pine, one-dark, solarized-dark"
+echo ""
