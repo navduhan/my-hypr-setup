@@ -40,7 +40,7 @@ return {
           end
         end,
       })
-      
+
       -- 3. Enable indentation
       vim.opt.smartindent = false -- Treesitter handles indentation better
       vim.api.nvim_create_autocmd("FileType", {

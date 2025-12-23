@@ -132,7 +132,7 @@ return {
       "MunifTanjim/nui.nvim",
     },
     keys = {
-      { "<leader>e", "<cmd>Neotree toggle<cr>", desc = "Toggle file explorer" },
+      { "<C-e>", "<cmd>Neotree toggle<cr>", desc = "Toggle file explorer" },
       { "<leader>fe", "<cmd>Neotree reveal<cr>", desc = "Reveal file in explorer" },
     },
     opts = {

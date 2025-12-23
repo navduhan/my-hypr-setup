@@ -12,5 +12,5 @@ opt.autoindent = true
 opt.smartindent = true
 
 -- Text width (PEP 8 standard is 79, common modern is 88 or 100)
-opt.textwidth = 88
+opt.textwidth = 100
 opt.formatoptions = opt.formatoptions + "t" -- Auto-wrap text using textwidth

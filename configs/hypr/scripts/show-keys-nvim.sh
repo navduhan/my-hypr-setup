@@ -6,11 +6,12 @@
 
 rofi -dmenu -i -markup-rows -p " Neovim Keys" -theme-str '
 window {
-    width: 750px;
+    width: 1600px;
     height: 85%;
 }
 listview {
     lines: 35;
+    columns: 4;
     scrollbar: true;
 }
 element {
