@@ -22,7 +22,7 @@ opt.smartindent = true
 opt.autoindent = true
 
 -- Line wrapping
-opt.wrap = false
+opt.wrap = true
 opt.linebreak = true
 
 -- Search
