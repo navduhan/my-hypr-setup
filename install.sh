@@ -108,6 +108,7 @@ install_packages() {
         power-profiles-daemon
         fprintd # fingerprint scanner support
         cava # audio visualizer
+        tmux # terminal multiplexer
 
         # Neovim & Dependencies
         neovim
@@ -155,6 +156,12 @@ link_configs() {
 
     for config_path in "$CONFIGS_DIR"/*; do
         config_name=$(basename "$config_path")
+        
+        # Skip tmux.conf as it needs special handling (home dir)
+        if [ "$config_name" == "tmux.conf" ]; then
+            continue
+        fi
+
         target_dir="${HOME}/.config/$config_name"
 
         # Check if it's a special config
@@ -193,6 +200,28 @@ link_configs() {
     done
 }
 
+setup_tmux() {
+    log "Setting up Tmux..."
+
+    # 1. Link tmux.conf to home directory
+    if [ -f "$CONFIGS_DIR/tmux.conf" ]; then
+        ln -sf "$CONFIGS_DIR/tmux.conf" "${HOME}/.tmux.conf"
+        success "Linked configs/tmux.conf -> ~/.tmux.conf"
+    else
+        warn "configs/tmux.conf not found!"
+    fi
+
+    # 2. Install TPM (Tmux Plugin Manager)
+    TPM_DIR="${HOME}/.tmux/plugins/tpm"
+    if [ ! -d "$TPM_DIR" ]; then
+        log "Installing TPM..."
+        git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+        success "Installed TPM to $TPM_DIR"
+    else
+        log "TPM already installed at $TPM_DIR"
+    fi
+}
+
 setup_initial_theme() {
     log "Setting up initial theme (One Dark)..."
     
@@ -218,6 +247,9 @@ backup_configs
 
 # 3. Symlink
 link_configs
+
+# 4. Tmux Setup
+setup_tmux
 
 # 4. Initial Theme Setup
 setup_initial_theme
