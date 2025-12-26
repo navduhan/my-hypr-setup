@@ -6,50 +6,57 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    lazy = false, -- Plugin does not support lazy-loading
+    -- tag = "v0.9.3",
+    branch = "master", -- Maintain legacy support (pre-rewrite)
     build = ":TSUpdate",
-    config = function()
-      -- 1. Install parsers
-      -- The new API uses require("nvim-treesitter").install(list)
-      local parsers = {
-        "lua",
-        "python",
-        "javascript",
-        "typescript",
+    lazy = false,
+    -- event = { "BufReadPost", "BufNewFile" },
+    dependencies = {
+      {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        init = function()
+          -- disable rtp plugin, as we only need its queries for mini.ai
+          -- In case other textobject modules are enabled, we will load them
+          -- once nvim-treesitter is loaded
+          require("lazy.core.loader").disable_rtp_plugin("nvim-treesitter-textobjects")
+        end,
+      },
+    },
+    opts = {
+      highlight = { enable = true },
+      indent = { enable = true },
+      ensure_installed = {
         "bash",
-        "json",
-        "yaml",
+        "c",
         "html",
-        "css",
+        "javascript",
+        "json",
+        "lua",
+        "luadoc",
+        "luap",
         "markdown",
+        "markdown_inline",
+        "python",
+        "query",
+        "regex",
+        "tsx",
+        "typescript",
         "vim",
         "vimdoc",
-        "c",
-      }
-
-      -- Install parsers asynchronously
-      require("nvim-treesitter").install(parsers)
-
-      -- 2. Enable highlighting
-      -- In the new nvim-treesitter, highlighting is manual via vim.treesitter.start()
-      vim.api.nvim_create_autocmd("FileType", {
-        callback = function()
-          local ok = pcall(vim.treesitter.start)
-          if not ok then
-            -- Fallback or silent failure if no parser exists
-          end
-        end,
-      })
-
-      -- 3. Enable indentation
-      vim.opt.smartindent = false -- Treesitter handles indentation better
-      vim.api.nvim_create_autocmd("FileType", {
-          callback = function()
-              local ok = pcall(function() 
-                  vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-              end)
-          end
-      })
+        "yaml",
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
     end,
   },
 }

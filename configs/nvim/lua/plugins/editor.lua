@@ -79,9 +79,30 @@ return {
     opts = {
       open_mapping = [[<C-\>]],
       direction = "float",
-      float_opts = { border = "curved" },
+      float_opts = {
+        border = "curved",
+        width = function() return math.ceil(vim.o.columns * 0.45) end,
+        height = function() return math.ceil(vim.o.lines * 0.45) end,
+      },
       shade_terminals = true,
     },
+    config = function(_, opts)
+      require("toggleterm").setup(opts)
+      
+      function _G.set_terminal_keymaps()
+        local opts = {buffer = 0}
+        -- Map navigation keys to TmuxNavigate commands to support both Vim splits and Tmux panes
+        vim.keymap.set('t', '<C-h>', [[<Cmd>TmuxNavigateLeft<CR>]], opts)
+        vim.keymap.set('t', '<C-j>', [[<Cmd>TmuxNavigateDown<CR>]], opts)
+        vim.keymap.set('t', '<C-k>', [[<Cmd>TmuxNavigateUp<CR>]], opts)
+        vim.keymap.set('t', '<C-l>', [[<Cmd>TmuxNavigateRight<CR>]], opts)
+        -- Also map Esc to exit terminal mode
+        vim.keymap.set('t', '<C-\\>', [[<C-\><C-n>]], opts)
+      end
+
+      -- Apply keymaps when a terminal opens
+      vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+    end,
   },
 
   -- Flash (motion)

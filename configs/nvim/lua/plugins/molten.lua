@@ -8,9 +8,11 @@ return {
   {
     "benlubas/molten-nvim",
     version = "^1.0.0", -- Use version 1.x
+    lazy = false, -- Important for remote plugins to register commands
     dependencies = { "3rd/image.nvim" },
     build = ":UpdateRemotePlugins",
     init = function()
+      vim.g.molten_output_win_max_height = 20
       -- Keymaps
       vim.keymap.set("n", "<leader>mi", ":MoltenInit<CR>", { desc = "Molten Init", silent = true })
       vim.keymap.set("n", "<leader>me", ":MoltenEvaluateOperator<CR>", { desc = "Molten Evaluate Operator", silent = true })
@@ -20,9 +22,6 @@ return {
       vim.keymap.set("n", "<leader>mh", ":MoltenHideOutput<CR>", { desc = "Molten Hide Output", silent = true })
       vim.keymap.set("n", "<leader>mo", ":noautocmd MoltenEnterOutput<CR>", { desc = "Molten Enter Output", silent = true })
     end,
-    opts = {
-      output_win_max_height = 20,
-    },
   },
 
   -- Image.nvim: For inline images (requires Kitty, WezTerm, etc.)

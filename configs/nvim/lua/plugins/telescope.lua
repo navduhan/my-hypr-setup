@@ -16,8 +16,14 @@ return {
         build = "make",
         cond = function() return vim.fn.executable("make") == 1 end,
       },
+      {
+        "nvim-telescope/telescope-bibtex.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" },
+      },
     },
     keys = {
+      -- Citations
+      { "<leader>sc", "<cmd>Telescope bibtex<cr>", desc = "Search Citations" },
       -- Find
       { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
       { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Grep text" },
@@ -90,6 +96,7 @@ return {
       local telescope = require("telescope")
       telescope.setup(opts)
       pcall(telescope.load_extension, "fzf")
+      pcall(telescope.load_extension, "bibtex")
     end,
   },
 }
