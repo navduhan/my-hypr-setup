@@ -25,8 +25,8 @@ return {
 			},
 		}
 
-		-- Disable quickfix auto-open
-		vim.g.vimtex_quickfix_mode = 0
+		-- Enable quickfix auto-open (2 = open on error)
+		vim.g.vimtex_quickfix_mode = 2
 
 		-- Specify files to clean
 		vim.g.vimtex_clean_additional_extensions = { "aux", "bbl", "blg", "fls", "out", "fdb_latexmk", "gz" }

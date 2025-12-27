@@ -97,6 +97,8 @@ install_packages() {
 
         # Apps
         dolphin # file manager
+        adw-gtk3 # libadwaita theme for gtk3
+        gnome-themes-extra # extra gnome themes
 
         # System utilities
         blueman # bluetooth manager for SwayNC

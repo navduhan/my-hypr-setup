@@ -6,6 +6,28 @@
 #              Updates Hyprland, Waybar, Rofi, and GTK settings.
 # -----------------------------------------------------------------------------
 
+set_gtk_theme() {
+    THEME_NAME="$1"
+    
+    # 1. Set using gsettings (for live changes)
+    gsettings set org.gnome.desktop.interface gtk-theme "$THEME_NAME"
+    gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+    
+    # 2. Config files for GTK 3.0 and 4.0
+    for GTK_VERSION in "3.0" "4.0"; do
+        GTK_CONFIG_DIR="$HOME/.config/gtk-$GTK_VERSION"
+        mkdir -p "$GTK_CONFIG_DIR"
+        
+        cat > "$GTK_CONFIG_DIR/settings.ini" <<EOF
+[Settings]
+gtk-application-prefer-dark-theme=1
+gtk-theme-name=$THEME_NAME
+EOF
+    done
+    
+    echo "Applied GTK theme: $THEME_NAME"
+}
+
 THEME="$1"
 DOTFILES_DIR="$HOME/Downloads/my-hypr-setup"
 CONFIGS_DIR="$DOTFILES_DIR/configs"
@@ -97,5 +119,8 @@ waybar & disown
 echo "Reloading SwayNC..."
 swaync-client -R
 swaync-client -rs
+
+# 10. GTK Theme
+set_gtk_theme "Adwaita-dark"
 
 echo "Theme switched successfully!"

@@ -14,4 +14,11 @@ return {
   { import = "plugins.telescope" },
   { import = "plugins.git" },
   { import = "plugins.molten" },
+  { import = "plugins.cursor-agent" },
+  { import = "plugins.copilot" },
+  { import = "plugins.gemini" },
+  { import = "plugins.none-ls" },
+  { import = "plugins.remote" },
+  { import = "plugins.tmux" },
+  { import = "plugins.vimtex" },
 }
