@@ -7,7 +7,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     -- tag = "v0.9.3",
-    branch = "master", -- Maintain legacy support (pre-rewrite)
+    branch = "master", -- Maint ain legacy support (pre-rewrite)
     build = ":TSUpdate",
     lazy = false,
     -- event = { "BufReadPost", "BufNewFile" },
