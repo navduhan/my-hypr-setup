@@ -74,6 +74,8 @@ install_packages() {
     PACKAGES=(
         # Hyprland & Core
         hyprland
+        hyprlock
+        hypridle
         waybar
         rofi-wayland
         swaync
