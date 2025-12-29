@@ -76,6 +76,10 @@ install_packages() {
         hyprland
         hyprlock
         hypridle
+        hyprtoolkit
+        hyprgraphics
+        hyprland-guiutils
+        hyprwire
         waybar
         rofi-wayland
         swaync
