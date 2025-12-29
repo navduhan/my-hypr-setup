@@ -23,12 +23,14 @@ return {
       ensure_installed = {
         "lua_ls",
         "pyright",
+        "ruff", -- Python linting/formatting
         "ts_ls",
         "html",
         "cssls",
         "jsonls",
         "yamlls",
         "bashls",
+        "texlab", -- LaTeX
       },
       automatic_installation = true,
     },
@@ -97,12 +99,22 @@ return {
           },
         },
         pyright = {},
+        ruff = {},
         ts_ls = {},
         html = {},
         cssls = {},
         jsonls = {},
         yamlls = {},
         bashls = {},
+        texlab = {
+          settings = {
+            texlab = {
+              build = {
+                onSave = true,
+              },
+            },
+          },
+        },
       }
 
       -- Setup servers
@@ -139,6 +151,9 @@ return {
         json = { "prettier" },
         yaml = { "prettier" },
         sh = { "shfmt" },
+        tex = { "latexindent" },
+        plaintex = { "latexindent" },
+        bib = { "latexindent" },
       },
     },
   },

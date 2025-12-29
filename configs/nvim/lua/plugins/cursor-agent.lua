@@ -8,9 +8,9 @@ return {
 	dependencies = { "nvim-lua/plenary.nvim" },
     cmd = { "CursorAgent", "CursorAgentSelection", "CursorAgentBuffer" },
     keys = {
-        { "<leader>ca", "<cmd>CursorAgent<CR>", desc = "Cursor Agent: Toggle terminal" },
-        { "<leader>ca", "<cmd>CursorAgentSelection<CR>", desc = "Cursor Agent: Send selection", mode = "v" },
-        { "<leader>cA", "<cmd>CursorAgentBuffer<CR>", desc = "Cursor Agent: Send buffer" },
+        { "<leader>cu", "<cmd>CursorAgent<CR>", desc = "Cursor Agent: Toggle terminal" },
+        { "<leader>cr", "<cmd>CursorAgentSelection<CR>", desc = "Cursor Agent: Send selection", mode = "v" },
+        { "<leader>cU", "<cmd>CursorAgentBuffer<CR>", desc = "Cursor Agent: Send buffer" },
     },
 	config = function()
 		require("cursor-agent").setup({
