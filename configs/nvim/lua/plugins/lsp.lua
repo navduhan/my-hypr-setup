@@ -60,8 +60,7 @@ return {
           map("K", vim.lsp.buf.hover, "Hover Documentation")
           map("gK", vim.lsp.buf.signature_help, "Signature Help")
           map("<leader>ca", vim.lsp.buf.code_action, "Code Action")
-          map("<leader>cr", vim.lsp.buf.rename, "Rename")
-          map("<leader>cf", function() vim.lsp.buf.format({ async = true }) end, "Format")
+          map("<leader>rn", vim.lsp.buf.rename, "Rename")
           map("<leader>cl", "<cmd>LspInfo<cr>", "LSP Info")
         end,
       })
@@ -131,14 +130,20 @@ return {
       end
     end,
   },
-
-  -- Formatting
-  {
-    "stevearc/conform.nvim",
+  
+        -- Conform (code formatter)
+  
+        {
+  
+          "stevearc/conform.nvim",
+  
+      
+  
+    
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     keys = {
-      { "<leader>cf", function() require("conform").format({ async = true }) end, mode = { "n", "v" }, desc = "Format" },
+      { "<leader>F", function() require("conform").format({ async = true, lsp_fallback = true }) end, mode = { "n", "v" }, desc = "Format" },
     },
     opts = {
       formatters_by_ft = {

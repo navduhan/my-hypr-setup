@@ -75,6 +75,14 @@ return {
           { "filename", path = 1, symbols = { modified = "  ", readonly = "", unnamed = "" } },
         },
         lualine_x = {
+          {
+            function()
+              local reg = vim.fn.reg_recording()
+              if reg == "" then return "" end
+              return "● Rec @" .. reg
+            end,
+            color = { fg = "#ff9e64", gui = "bold" },
+          },
           { "diff", symbols = { added = " ", modified = " ", removed = " " } },
         },
         lualine_y = {

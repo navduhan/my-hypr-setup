@@ -171,8 +171,8 @@
 | `K` | Hover Documentation |
 | `gK` | Signature Help |
 | `Space + ca` | Code Action |
-| `Space + cr` | Rename Symbol |
-| `Space + cf` | Format Code |
+| `Space + rn` | Rename Symbol |
+| `Space + F` | Format Code |
 | `Space + cl` | LSP Info |
 
 ### Diagnostics
