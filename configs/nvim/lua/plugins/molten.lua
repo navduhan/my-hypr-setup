@@ -4,6 +4,17 @@
 -- =============================================================================
 
 return {
+  -- Jupytext: Open .ipynb files as markdown/python
+  {
+    "GCBallesteros/jupytext.nvim",
+    config = true,
+    opts = {
+      style = "markdown",
+      output_extension = "md",
+      force_ft = "markdown",
+    },
+  },
+
   -- Molten: The Jupyter Kernel Client
   {
     "benlubas/molten-nvim",

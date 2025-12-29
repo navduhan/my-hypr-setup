@@ -120,6 +120,7 @@ install_packages() {
         fzf # fuzzy finder
         npm # for LSP servers
         python-pip # for python LSP
+        python-jupytext # for .ipynb support in nvim
         go # for go LSP
         rust # for rust-analyzer
         lua-language-server
