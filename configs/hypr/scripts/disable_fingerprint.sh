@@ -26,6 +26,24 @@ else
     echo "PAM file $PAM_FILE does not exist."
 fi
 
+# Clean up SDDM configuration
+SDDM_PAM="/etc/pam.d/sddm"
+if [ -f "$SDDM_PAM" ]; then
+    if grep -q "pam_fprintd.so" "$SDDM_PAM"; then
+        echo "Removing fingerprint module from $SDDM_PAM..."
+        sudo sed -i '/pam_fprintd.so/d' "$SDDM_PAM"
+        echo -e "${GREEN}[OK] SDDM Fingerprint disabled.${NC}"
+    fi
+fi
+
+# Remove SDDM fingerprint config file
+SDDM_FP_CONF="/etc/sddm.conf.d/fingerprint.conf"
+if [ -f "$SDDM_FP_CONF" ]; then
+    echo "Removing $SDDM_FP_CONF..."
+    sudo rm "$SDDM_FP_CONF"
+    echo -e "${GREEN}[OK] SDDM Fingerprint auto-login config removed.${NC}"
+fi
+
 echo ""
 echo "Please try locking and unlocking with your PASSWORD now."
 echo "If it still hangs, you may need to 'cat /etc/pam.d/system-auth' to ensure it is valid."
