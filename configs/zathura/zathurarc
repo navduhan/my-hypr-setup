@@ -1,0 +1,104 @@
+# Catppuccin Latte Theme for Zathura
+# Font Configuration
+set font "Cascadia Code 11"
+
+# Window and Interface Settings
+set window-title-basename true
+set window-title-page true
+set window-title-home-tilde true
+set statusbar-basename true
+set selection-clipboard clipboard
+set adjust-open width
+set pages-per-row 1
+set scroll-page-aware true
+set scroll-full-overlap 0.01
+set scroll-step 50
+set zoom-min 10
+set guioptions ""
+
+# Catppuccin Latte Color Scheme
+set default-bg                 "#eff1f5"                  # Base
+set default-fg                 "#4c4f69"                  # Text
+
+# Status bar
+set statusbar-bg               "#dce0e8"                  # Crust
+set statusbar-fg               "#4c4f69"                  # Text
+
+# Input bar (search, commands)
+set inputbar-bg                "#e6e9ef"                  # Mantle
+set inputbar-fg                "#4c4f69"                  # Text
+
+# Notification colors
+set notification-bg            "#04a5e5"                  # Sky
+set notification-fg            "#eff1f5"                  # Base
+set notification-error-bg      "#d20f39"                  # Red
+set notification-error-fg      "#eff1f5"
+set notification-warning-bg    "#df8e1d"                  # Yellow
+set notification-warning-fg    "#eff1f5"
+
+# Completion menu
+set completion-bg              "#e6e9ef"                  # Mantle
+set completion-fg              "#4c4f69"                  # Text
+set completion-highlight-bg    "#1e66f5"                  # Blue
+set completion-highlight-fg    "#eff1f5"                  # Base
+set completion-group-bg        "#ccd0da"                  # Surface0
+set completion-group-fg        "#4c4f69"
+
+# Index/TOC
+set index-bg                   "#eff1f5"                  # Base
+set index-fg                   "#4c4f69"                  # Text
+set index-active-bg            "#04a5e5"                  # Sky
+set index-active-fg            "#eff1f5"
+
+# Highlight colors for search and selection
+set highlight-color            "rgba(30,102,245,0.35)"    # Blue selection (standard)
+set highlight-active-color     "rgba(30,102,245,0.50)"    # Blue active
+set highlight-fg               "#eff1f5"
+
+# Recolor settings for PDF content - DISABLED to show actual colors
+set recolor                    false
+set recolor-lightcolor         "#eff1f5"
+set recolor-darkcolor          "#4c4f69"
+set recolor-reverse-video      false
+set recolor-keephue            true
+
+# Page rendering settings
+set render-loading             true
+set render-loading-bg          "#eff1f5"
+set render-loading-fg          "#1e66f5"                  # Blue
+
+# Smooth scrolling and page transitions
+set page-padding               10
+set page-cache-size            32
+set incremental-search         true
+set abort-clear-search         true
+set advance-pages-per-row      false
+
+# Key bindings for enhanced navigation and recolor toggle
+map <C-i>       zoom in
+map <C-o>       zoom out
+map <C-r>       rotate
+map <C-g>       recolor                # Toggle glassy overlay on/off
+map <C-e>       exec "echo $FILE | xclip -selection clipboard"
+map <F5>        reload
+map <F11>       toggle_fullscreen
+
+# Search settings
+set database                   sqlite
+set synctex                    true
+set synctex-editor-command     "code --goto %{input}:%{line}"
+
+# Print settings
+set print-command              "lp"
+
+# Sandbox settings for security
+set sandbox                    normal
+
+# Link handling
+set link-zoom                  true
+set link-hadjust               true
+
+# Startup options
+set first-page-column          1:1
+set window-height              900
+set window-width               1200

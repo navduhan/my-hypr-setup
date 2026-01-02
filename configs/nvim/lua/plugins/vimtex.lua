@@ -8,7 +8,7 @@ return {
 	lazy = false, -- Vimtex should not be lazy loaded to ensure reverse search works
 	init = function()
 		-- Use Skim on macOS for forward search (or generic open if simpler)
-		-- Adjust 'view_method' based on installed PDF viewer (e.g. 'skim', 'zathura')
+		-- Adjust 'view_method' based on installed PDF viewer (e.g. 'skim', 'zathura', 'evince')
 		vim.g.vimtex_view_method = "zathura"
 
 		-- Compile on save using latexmk (automates bibtex/references)
