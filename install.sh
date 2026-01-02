@@ -94,7 +94,10 @@ install_packages() {
         slurp
         wl-clipboard
         wlogout
+        wlogout
         hyprpicker # color picker
+        imagemagick # for image.nvim
+        quarto-cli-bin # for quarto-nvim (AUR)
 
         # Fonts
         ttf-font-awesome
@@ -125,24 +128,79 @@ install_packages() {
         fd # for telescope find_files
         fzf # fuzzy finder
         npm # for LSP servers
-        python-pip # for python LSP
-        python-pynvim # for nvim remote plugins (molten)
-        python-jupyter_client # for molten
-        python-ipykernel # for molten kernels
-        python-jupytext # for .ipynb support in nvim
+        # python-pip # Using venv instead
+        # python-pynvim # Using venv instead
+        # python-jupyter_client # Using venv
+        # python-ipykernel # Using venv
+        # python-jupytext # Using venv
         go # for go LSP
         rust # for rust-analyzer
         lua-language-server
         stylua # lua formatter
         prettier # js/ts/css formatter
         shfmt # shell formatter
-        python-black # python formatter
-        python-isort # python import sorter
+        # python-black # Using venv
+        # python-isort # Using venv
     )
 
     log "Installing packages..."
     $AUR_HELPER -S --needed --noconfirm "${PACKAGES[@]}"
 } 
+
+setup_node() {
+    log "Setting up Node.js via NVM..."
+    
+    # Check if NVM is installed
+    export NVM_DIR="$HOME/.nvm"
+    if [ -s "$NVM_DIR/nvm.sh" ]; then
+        . "$NVM_DIR/nvm.sh"
+    elif [ -s "/usr/share/nvm/init-nvm.sh" ]; then # Arch package location
+        . "/usr/share/nvm/init-nvm.sh"
+    fi
+
+    if ! command -v nvm &> /dev/null; then
+        warn "NVM not found. Installing NVM..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    fi
+
+    log "Installing Node LTS..."
+    nvm install --lts
+    nvm use --lts
+    nvm alias default lts/*
+
+    log "Installing global NPM packages..."
+    npm install -g neovim @google/gemini-cli
+    success "Node setup complete"
+}
+
+setup_cursor() {
+    log "Installing Cursor AI Editor..."
+    # User provided command: curl https://cursor.com/install -fsSL | bash
+    if command -v curl &> /dev/null; then
+        curl -fsSL https://cursor.com/install | bash
+        success "Cursor installed"
+    else
+        warn "curl not found, cannot install Cursor."
+    fi
+}
+
+setup_neovim_venv() {
+    log "Setting up Neovim Python Virtual Environment..."
+    VENV_PATH="$HOME/.neovim-venv"
+
+    if [ ! -d "$VENV_PATH" ]; then
+        log "Creating virtual environment at $VENV_PATH..."
+        python3 -m venv "$VENV_PATH"
+    fi
+
+    log "Installing Python dependencies in venv..."
+    "$VENV_PATH/bin/pip" install --upgrade pip
+    "$VENV_PATH/bin/pip" install pynvim jupyter_client cairosvg pnglatex plotly kaleido pyperclip nbformat jupytext pillow black isort
+
+    success "Neovim venv setup complete"
+}
 
 backup_configs() {
     log "Removing old backups..."
@@ -266,7 +324,28 @@ link_configs
 # 4. Tmux Setup
 setup_tmux
 
-# 4. Initial Theme Setup
+# 5. Node & Python Setup
+setup_node
+setup_cursor
+setup_neovim_venv
+
+register_conda_kernels() {
+    log "Registering Conda Kernels..."
+    KERNEL_SCRIPT="$CONFIGS_DIR/hypr/scripts/refresh_conda_kernels.sh"
+    
+    if [ -f "$KERNEL_SCRIPT" ]; then
+        chmod +x "$KERNEL_SCRIPT"
+        # Run it. It internally checks for Conda existence.
+        "$KERNEL_SCRIPT" || warn "Conda kernel registration failed (Conda might not be installed)."
+    else
+        warn "refresh_conda_kernels.sh not found at $KERNEL_SCRIPT"
+    fi
+}
+
+# 7. Register Conda Kernels (if Conda exists)
+register_conda_kernels
+
+# 8. Initial Theme Setup
 setup_initial_theme
 
 log "Installation complete!"

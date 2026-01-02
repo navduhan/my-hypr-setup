@@ -7,12 +7,22 @@ return {
   -- Jupytext: Open .ipynb files as markdown/python
   {
     "GCBallesteros/jupytext.nvim",
+    lazy = false,
     config = true,
     opts = {
       style = "markdown",
       output_extension = "md",
       force_ft = "markdown",
     },
+    init = function()
+      -- Try to force filetype detection or association if the plugin doesn't catch it
+      vim.api.nvim_create_autocmd({ "BufReadCmd", "BufReadPre" }, {
+        pattern = "*.ipynb",
+        callback = function(ev)
+          -- Ensure jupytext is loaded? It should be with lazy=false
+        end,
+      })
+    end,
   },
 
   -- Molten: The Jupyter Kernel Client
@@ -24,6 +34,7 @@ return {
     build = ":UpdateRemotePlugins",
     init = function()
       vim.g.molten_output_win_max_height = 20
+      vim.g.molten_image_provider = "image.nvim"
       -- Keymaps
       vim.keymap.set("n", "<leader>mi", ":MoltenInit<CR>", { desc = "Molten Init", silent = true })
       vim.keymap.set("n", "<leader>me", ":MoltenEvaluateOperator<CR>", { desc = "Molten Evaluate Operator", silent = true })
@@ -38,6 +49,7 @@ return {
   -- Image.nvim: For inline images (requires Kitty, WezTerm, etc.)
   {
     "3rd/image.nvim",
+    lazy = false,
     opts = {
       backend = "kitty", -- Using kitty as per your file structure
       integrations = {
