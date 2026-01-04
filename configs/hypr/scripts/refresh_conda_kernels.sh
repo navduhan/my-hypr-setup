@@ -50,10 +50,13 @@ conda env list | grep -v "^#" | while read -r line; do
     
     # Check if we should install ipykernel
     # We use 'conda run' to check/install without fully activating
-    echo "  Checking for ipykernel..."
     if ! conda run -n "$ENV_NAME" python -c "import ipykernel" &> /dev/null; then
         echo "  ipykernel not found. Installing..."
-        conda install -n "$ENV_NAME" -y ipykernel
+        if ! conda install -n "$ENV_NAME" -y ipykernel; then
+             echo "  [ERROR] Failed to install ipykernel in '$ENV_NAME'. Skipping..."
+             echo "  (This usually happens due to conflicting packages in the environment)"
+             continue
+        fi
     else
         echo "  ipykernel already installed."
     fi

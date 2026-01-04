@@ -8,6 +8,11 @@ local opt = vim.opt
 -- Python Provider (Virtual Environment)
 vim.g.python3_host_prog = vim.fn.expand("~/.neovim-venv/bin/python")
 
+-- Ruby provider configuration
+vim.g.ruby_host_prog = "/home/naveen/.local/share/gem/ruby/3.4.0/bin/neovim-ruby-host"
+
+-- General Options
+
 -- Line numbers
 opt.number = true
 opt.relativenumber = true

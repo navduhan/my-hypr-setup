@@ -41,6 +41,9 @@ map("v", ">", ">gv", { desc = "Indent right" })
 -- Clear search highlighting
 map("n", "<leader>nh", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
+-- Toggle word wrap
+map("n", "<leader>z", ":set wrap!<CR>", { desc = "Toggle word wrap" })
+
 -- Save and quit
 map("n", "<leader>w", ":w<CR>", { desc = "Save file" })
 map("n", "<leader>W", ":wa<CR>", { desc = "Save all files" })

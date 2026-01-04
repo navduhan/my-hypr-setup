@@ -26,6 +26,7 @@ vim.g.loaded_rrhelper = 1
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_netrwSettings = 1
+vim.g.loaded_perl_provider = 0
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -72,11 +73,9 @@ require("lazy").setup("plugins", {
 })
 
 -- Load theme (symlinked by theme switcher)
-vim.defer_fn(function()
-  local theme_file = vim.fn.stdpath("config") .. "/lua/theme.lua"
-  if vim.fn.filereadable(theme_file) == 1 then
-    dofile(theme_file)
-  else
-    pcall(vim.cmd.colorscheme, "catppuccin-mocha")
-  end
-end, 0)
+local theme_file = vim.fn.stdpath("config") .. "/lua/theme.lua"
+if vim.fn.filereadable(theme_file) == 1 then
+  dofile(theme_file)
+else
+  pcall(vim.cmd.colorscheme, "catppuccin-mocha")
+end

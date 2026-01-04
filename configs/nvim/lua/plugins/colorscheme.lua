@@ -8,8 +8,7 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    lazy = false,
-    priority = 1000,
+    lazy = true,
     opts = {
       flavour = "mocha",
       transparent_background = true,
@@ -22,6 +21,8 @@ return {
         treesitter = true,
         which_key = true,
         indent_blankline = { enabled = true },
+        noice = true,
+        notify = true,
         native_lsp = {
           enabled = true,
           underlines = {
@@ -87,6 +88,7 @@ return {
   {
     "navarasu/onedark.nvim",
     lazy = true,
+    priority = 1000,
     opts = {
       style = "dark",
       transparent = true,

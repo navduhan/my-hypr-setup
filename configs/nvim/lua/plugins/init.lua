@@ -23,4 +23,5 @@ return {
   { import = "plugins.dap" },
   { import = "plugins.persistence" },
   { import = "plugins.vimtex" },
+  { import = "plugins.markdown" },
 }

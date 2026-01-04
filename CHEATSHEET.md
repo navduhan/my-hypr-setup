@@ -251,6 +251,28 @@
 | `Space + cc` | Close Quickfix |
 | `]q` / `[q` | Next/Prev Quickfix |
 
+### Markdown
+| Key | Action |
+|-----|--------|
+| `Space + mp` | Toggle Preview (browser) |
+| `Space + ms` | Start Preview |
+| `Space + mx` | Stop Preview |
+| `Space + mr` | Toggle In-buffer Render |
+| `Space + mP` | Export to PDF & Open |
+| `Space + mD` | Export to DOCX |
+| `Space + mH` | Export to HTML & Open |
+| `Space + mt` | Generate Table of Contents |
+
+### LaTeX (vimtex)
+| Key | Action |
+|-----|--------|
+| `Space + ll` | Compile with LuaLaTeX |
+| `Space + lc` | Clean Aux Files |
+| `\ll` | Start/Stop Continuous Compile |
+| `\lv` | View PDF |
+| `\le` | Show Errors |
+| `\lt` | Toggle TOC |
+
 ### Misc
 | Key | Action |
 |-----|--------|
@@ -264,12 +286,15 @@
 
 ### Neovim Commands
 ```vim
-:Mason          " Manage LSP servers
-:Lazy           " Plugin manager
-:checkhealth    " Check Neovim health
-:TSInstall      " Install treesitter parser
-:LspInfo        " LSP status
-:ConformInfo    " Formatter info
+:Mason              " Manage LSP servers
+:Lazy               " Plugin manager
+:checkhealth        " Check Neovim health
+:TSInstall          " Install treesitter parser
+:LspInfo            " LSP status
+:ConformInfo        " Formatter info
+:MarkdownPreview    " Start markdown preview
+:VimtexCompile      " Start LaTeX compile
+:VimtexView         " View PDF
 ```
 
 ### Theme Switching

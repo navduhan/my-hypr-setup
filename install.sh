@@ -141,10 +141,13 @@ install_packages() {
         shfmt # shell formatter
         # python-black # Using venv
         # python-isort # Using venv
+        pandoc # document converter (markdown -> pdf/docx)
+        texlive-basic # for pandoc pdf export
     )
 
     log "Installing packages..."
-    $AUR_HELPER -S --needed --noconfirm "${PACKAGES[@]}"
+    # --overwrite '*' helps handle file conflicts from old packages
+    $AUR_HELPER -S --needed --noconfirm --overwrite '*' "${PACKAGES[@]}"
 } 
 
 setup_node() {

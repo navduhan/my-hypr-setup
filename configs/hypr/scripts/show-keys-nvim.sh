@@ -116,10 +116,27 @@ ys{motion}{char}       Add Surround
 ds{char}               Delete Surround
 cs{old}{new}           Change Surround
 
+<b>━━━ Markdown ━━━</b>
+Space + mp             Toggle Preview (browser)
+Space + ms             Start Preview
+Space + mx             Stop Preview
+Space + mr             Toggle In-buffer Render
+Space + mP             Export to PDF & Open
+Space + mD             Export to DOCX
+Space + mH             Export to HTML & Open
+Space + mt             Generate Table of Contents
+
+<b>━━━ LaTeX (vimtex) ━━━</b>
+Space + ll             Compile with LuaLaTeX
+Space + lc             Clean Aux Files
+\\ll                    Start/Stop Continuous Compile
+\\lv                    View PDF
+\\le                    Show Errors
+
 <b>━━━ Misc ━━━</b>
 Space + nh             Clear Search Highlight
 Space + sr             Search & Replace
 Space + rw             Replace Word
-Space + mx             Make Executable
+Space + z              Toggle Word Wrap
 ]] / [[                Next/Prev Reference
 EOF

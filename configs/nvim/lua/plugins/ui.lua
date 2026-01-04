@@ -203,6 +203,10 @@ return {
       render = "compact",
       stages = "fade",
       background_colour = "#000000",
+      on_open = function(win)
+        vim.api.nvim_win_set_config(win, { zindex = 100 })
+        vim.api.nvim_win_set_option(win, "winhighlight", "Normal:NormalFloat,FloatBorder:FloatBorder,NotifyBackground:NormalFloat")
+      end,
     },
     init = function()
       vim.notify = require("notify")
@@ -243,6 +247,44 @@ return {
         command_palette = true,
         long_message_to_split = true,
       },
+      views = {
+        cmdline_popup = {
+          position = {
+            row = 5,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = "auto",
+          },
+          border = {
+            style = "rounded",
+            padding = { 0, 1 },
+          },
+          filter_options = {},
+          win_options = {
+            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+          },
+        },
+        popupmenu = {
+          relative = "editor",
+          position = {
+            row = 8,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = 10,
+          },
+          border = {
+            style = "rounded",
+            padding = { 0, 1 },
+          },
+          win_options = {
+            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+          },
+        },
+      },
     },
     keys = {
       { "<leader>snl", function() require("noice").cmd("last") end, desc = "Noice Last Message" },
@@ -253,4 +295,12 @@ return {
 
   -- Icons
   { "nvim-tree/nvim-web-devicons", lazy = true },
+
+  {
+    "echasnovski/mini.nvim",
+    version = false,
+    config = function()
+      require("mini.icons").setup()
+    end,
+  },
 }

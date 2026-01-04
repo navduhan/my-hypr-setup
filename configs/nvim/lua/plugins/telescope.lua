@@ -62,6 +62,7 @@ return {
             width = 0.87,
             height = 0.80,
           },
+          winblend = 0, -- Set to 0 for solid background, or 10-30 for slight transparency
           file_ignore_patterns = { "node_modules", ".git/", "%.lock" },
           path_display = { "truncate" },
           mappings = {
@@ -97,6 +98,54 @@ return {
       telescope.setup(opts)
       pcall(telescope.load_extension, "fzf")
       pcall(telescope.load_extension, "bibtex")
+
+      -- Apply Telescope highlights that follow the colorscheme
+      local function set_telescope_highlights()
+        local colors = {}
+        -- Get colors from current colorscheme's Normal and other highlight groups
+        local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+        local normal_float = vim.api.nvim_get_hl(0, { name = "NormalFloat" })
+        local cursor_line = vim.api.nvim_get_hl(0, { name = "CursorLine" })
+        local title = vim.api.nvim_get_hl(0, { name = "Title" })
+        local border = vim.api.nvim_get_hl(0, { name = "FloatBorder" })
+
+        -- Use NormalFloat bg if available, otherwise create a slightly different bg
+        local bg = normal_float.bg or normal.bg
+        local selection_bg = cursor_line.bg
+
+        if bg then
+          -- Telescope prompt
+          vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = bg, fg = normal.fg })
+          vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = bg, fg = normal.fg })
+          vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = bg, fg = normal.fg })
+          vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = bg, fg = normal.fg })
+
+          -- Borders
+          vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = bg, fg = border.fg or normal.fg })
+          vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { bg = bg, fg = border.fg or normal.fg })
+          vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { bg = bg, fg = border.fg or normal.fg })
+          vim.api.nvim_set_hl(0, "TelescopePromptBorder", { bg = bg, fg = border.fg or normal.fg })
+
+          -- Titles
+          vim.api.nvim_set_hl(0, "TelescopeTitle", { bg = bg, fg = title.fg, bold = true })
+          vim.api.nvim_set_hl(0, "TelescopePreviewTitle", { bg = bg, fg = title.fg, bold = true })
+          vim.api.nvim_set_hl(0, "TelescopeResultsTitle", { bg = bg, fg = title.fg, bold = true })
+          vim.api.nvim_set_hl(0, "TelescopePromptTitle", { bg = bg, fg = title.fg, bold = true })
+
+          -- Selection
+          if selection_bg then
+            vim.api.nvim_set_hl(0, "TelescopeSelection", { bg = selection_bg, fg = normal.fg, bold = true })
+          end
+        end
+      end
+
+      -- Apply highlights now and whenever colorscheme changes
+      set_telescope_highlights()
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "*",
+        callback = set_telescope_highlights,
+        desc = "Apply Telescope highlights based on colorscheme",
+      })
     end,
   },
 }
