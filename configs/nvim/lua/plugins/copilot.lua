@@ -1,44 +1,19 @@
 -- =============================================================================
 -- File: plugins/copilot.lua
--- Description: Github Copilot configuration
+-- Description: Github Copilot configuration (using copilot.vim)
 -- =============================================================================
 
 return {
-  -- Copilot Core
+  -- Copilot Core (Vim version)
   {
-    "zbirenbaum/copilot.lua",
+    "github/copilot.vim",
     cmd = "Copilot",
     event = "InsertEnter",
-    opts = {
-      suggestion = {
-        enabled = true,
-        auto_trigger = true,
-        debounce = 75,
-        keymap = {
-          accept = "<C-f>",
-          accept_word = false,
-          accept_line = false,
-          next = "<M-]>",
-          prev = "<M-[>",
-          dismiss = "<C-]>",
-        },
-      },
-      panel = {
-        enabled = true,
-        auto_refresh = false,
-        keymap = {
-          jump_prev = "[[",
-          jump_next = "]]",
-          accept = "<CR>",
-          refresh = "gr",
-          open = "<M-CR>",
-        },
-        layout = {
-          position = "bottom",
-          ratio = 0.4,
-        },
-      },
-      filetypes = {
+    init = function()
+      -- For copilot.vim, we use global variables for configuration
+      -- These should be set before the plugin is loaded, so we use 'init'
+      vim.g.copilot_no_tab_map = true
+      vim.g.copilot_filetypes = {
         yaml = false,
         markdown = false,
         help = false,
@@ -48,8 +23,11 @@ return {
         svn = false,
         cvs = false,
         ["."] = false,
-      },
-    },
+      }
+    end,
+    config = function()
+      vim.api.nvim_set_keymap("i", "<C-f>", 'copilot#Accept("<CR>")', { silent = true, expr = true, replace_keycodes = false })
+    end,
   },
 
   -- Copilot Chat
@@ -57,7 +35,7 @@ return {
     "CopilotC-Nvim/CopilotChat.nvim",
     branch = "main",
     dependencies = {
-      { "zbirenbaum/copilot.lua" },
+      { "github/copilot.vim" },
       { "nvim-lua/plenary.nvim" },
     },
     cmd = "CopilotChat",

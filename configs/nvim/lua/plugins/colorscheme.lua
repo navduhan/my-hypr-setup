@@ -16,6 +16,7 @@ return {
       integrations = {
         cmp = true,
         gitsigns = true,
+        neotree = true,
         nvimtree = true,
         telescope = true,
         treesitter = true,

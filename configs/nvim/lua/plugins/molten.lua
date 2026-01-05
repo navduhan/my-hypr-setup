@@ -35,14 +35,34 @@ return {
     init = function()
       vim.g.molten_output_win_max_height = 20
       vim.g.molten_image_provider = "image.nvim"
+      vim.g.molten_virt_text_output = true
+      vim.g.molten_use_none_ls = true
+
       -- Keymaps
       vim.keymap.set("n", "<leader>mi", ":MoltenInit<CR>", { desc = "Molten Init", silent = true })
       vim.keymap.set("n", "<leader>me", ":MoltenEvaluateOperator<CR>", { desc = "Molten Evaluate Operator", silent = true })
       vim.keymap.set("n", "<leader>ml", ":MoltenEvaluateLine<CR>", { desc = "Molten Evaluate Line", silent = true })
+      vim.keymap.set("n", "<leader>mp", ":MoltenEvaluateOperator ip<CR>", { desc = "Molten Evaluate Paragraph", silent = true })
       vim.keymap.set("v", "<leader>r", ":<C-u>MoltenEvaluateVisual<CR>gv", { desc = "Molten Evaluate Visual", silent = true })
       vim.keymap.set("n", "<leader>md", ":MoltenDelete<CR>", { desc = "Molten Delete Cell", silent = true })
       vim.keymap.set("n", "<leader>mh", ":MoltenHideOutput<CR>", { desc = "Molten Hide Output", silent = true })
       vim.keymap.set("n", "<leader>mo", ":noautocmd MoltenEnterOutput<CR>", { desc = "Molten Enter Output", silent = true })
+
+      -- venv-selector integration for Molten
+      -- This autocmd will run whenever the python path is updated by venv-selector
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "VenvSelectorActivated",
+        callback = function()
+          if vim.bo.filetype == "python" then
+            local venv_path = vim.env.VIRTUAL_ENV
+            if venv_path then
+              -- We don't automatically re-init because it might be disruptive, 
+              -- but we notify the user.
+              vim.notify("Venv activated: " .. venv_path .. "\nRun <leader>mi to re-initialize Molten if needed.", vim.log.levels.INFO)
+            end
+          end
+        end,
+      })
     end,
   },
 

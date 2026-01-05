@@ -6,7 +6,8 @@
 local opt = vim.opt
 
 -- Python Provider (Virtual Environment)
-vim.g.python3_host_prog = vim.fn.expand("~/.neovim-venv/bin/python")
+-- vim.g.python3_host_prog = vim.fn.expand("~/.neovim-venv/bin/python")
+-- Use dynamic python provider (respects active venv)
 
 -- Ruby provider configuration
 vim.g.ruby_host_prog = "/home/naveen/.local/share/gem/ruby/3.4.0/bin/neovim-ruby-host"

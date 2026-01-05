@@ -26,6 +26,7 @@ return {
         dashboard.button("n", "  New file", ":ene <BAR> startinsert<CR>"),
         dashboard.button("r", "  Recent files", ":Telescope oldfiles<CR>"),
         dashboard.button("g", "󰱼  Find text", ":Telescope live_grep<CR>"),
+        dashboard.button("s", "  Restore Session", [[<cmd>lua require("persistence").load()<cr>]]),
         dashboard.button("c", "  Config", ":e $MYVIMRC<CR>"),
         dashboard.button("l", "󰒲  Lazy", ":Lazy<CR>"),
         dashboard.button("m", "  Mason", ":Mason<CR>"),
@@ -146,6 +147,10 @@ return {
     opts = {
       close_if_last_window = true,
       popup_border_style = "rounded",
+      source_selector = {
+        winbar = true,
+        statusline = false,
+      },
       filesystem = {
         hijack_netrw_behavior = "open_current",
         follow_current_file = { enabled = true },
@@ -217,6 +222,44 @@ return {
   {
     "stevearc/dressing.nvim",
     lazy = true,
+    opts = {
+      input = {
+        enabled = true,
+        default_prompt = "Input:",
+        title_pos = "left",
+        insert_only = true,
+        start_in_insert = true,
+        border = "rounded",
+        relative = "editor",
+        prefer_width = 40,
+        width = nil,
+        max_width = { 140, 0.9 },
+        min_width = { 20, 0.2 },
+        buf_options = {},
+        win_options = {
+          winblend = 10,
+          winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+        },
+        mappings = {
+          n = {
+            ["<Esc>"] = "Close",
+            ["<CR>"] = "Confirm",
+          },
+          i = {
+            ["<C-c>"] = "Close",
+            ["<CR>"] = "Confirm",
+            ["<Up>"] = "HistoryPrev",
+            ["<Down>"] = "HistoryNext",
+          },
+        },
+        override = function(conf)
+          conf.anchor = "NW"
+          conf.row = 0
+          return conf
+        end,
+        get_config = nil,
+      },
+    },
     init = function()
       vim.ui.select = function(...)
         require("lazy").load({ plugins = { "dressing.nvim" } })

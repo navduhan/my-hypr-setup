@@ -142,7 +142,7 @@ install_packages() {
         # python-black # Using venv
         # python-isort # Using venv
         pandoc # document converter (markdown -> pdf/docx)
-        texlive-basic # for pandoc pdf export
+        # texlive-basic # for pandoc pdf export
     )
 
     log "Installing packages..."

@@ -97,7 +97,7 @@ return {
         vim.keymap.set('t', '<C-k>', [[<Cmd>TmuxNavigateUp<CR>]], opts)
         vim.keymap.set('t', '<C-l>', [[<Cmd>TmuxNavigateRight<CR>]], opts)
         -- Also map Esc to exit terminal mode
-        vim.keymap.set('t', '<C-\\>', [[<C-\><C-n>]], opts)
+        vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
       end
 
       -- Apply keymaps when a terminal opens
