@@ -106,7 +106,7 @@ install_packages() {
 
         # Apps
         dolphin # file manager
-        adw-gtk3 # libadwaita theme for gtk3
+        adw-gtk-theme # libadwaita theme for gtk3
         gnome-themes-extra # extra gnome themes
 
         # System utilities
@@ -128,27 +128,23 @@ install_packages() {
         fd # for telescope find_files
         fzf # fuzzy finder
         npm # for LSP servers
-        # python-pip # Using venv instead
-        # python-pynvim # Using venv instead
-        # python-jupyter_client # Using venv
-        # python-ipykernel # Using venv
-        # python-jupytext # Using venv
         go # for go LSP
         rust # for rust-analyzer
         lua-language-server
         stylua # lua formatter
         prettier # js/ts/css formatter
         shfmt # shell formatter
-        # python-black # Using venv
-        # python-isort # Using venv
+        
+        # Markdown & PDF Tools
         pandoc # document converter (markdown -> pdf/docx)
-        # texlive-basic # for pandoc pdf export
+        texlive-xetex # Required for pandoc PDF export with unicode support
+        texlive-latexextra # Often useful for additional latex packages
     )
 
     log "Installing packages..."
     # --overwrite '*' helps handle file conflicts from old packages
     $AUR_HELPER -S --needed --noconfirm --overwrite '*' "${PACKAGES[@]}"
-} 
+}
 
 setup_node() {
     log "Setting up Node.js via NVM..."
@@ -192,6 +188,14 @@ setup_cursor() {
 setup_neovim_venv() {
     log "Setting up Neovim Python Virtual Environment..."
     VENV_PATH="$HOME/.neovim-venv"
+    JUPYTER_RUNTIME="$HOME/.local/share/jupyter/runtime"
+
+    # Ensure Jupyter runtime directory exists (fixes Molten kernel issues)
+    if [ ! -d "$JUPYTER_RUNTIME" ]; then
+        log "Creating Jupyter runtime directory: $JUPYTER_RUNTIME"
+        mkdir -p "$JUPYTER_RUNTIME"
+        chmod 755 "$JUPYTER_RUNTIME"
+    fi
 
     if [ ! -d "$VENV_PATH" ]; then
         log "Creating virtual environment at $VENV_PATH..."
@@ -200,7 +204,21 @@ setup_neovim_venv() {
 
     log "Installing Python dependencies in venv..."
     "$VENV_PATH/bin/pip" install --upgrade pip
-    "$VENV_PATH/bin/pip" install pynvim jupyter_client cairosvg pnglatex plotly kaleido pyperclip nbformat jupytext pillow black isort
+    # Core deps for Molten/Jupytext/Neovim
+    "$VENV_PATH/bin/pip" install --upgrade \
+        pynvim \
+        jupyter_client \
+        ipykernel \
+        cairosvg \
+        pnglatex \
+        plotly \
+        kaleido \
+        pyperclip \
+        nbformat \
+        jupytext \
+        pillow \
+        black \
+        isort
 
     success "Neovim venv setup complete"
 }
@@ -230,7 +248,8 @@ link_configs() {
     SPECIAL_CONFIGS=( ["hypr"]="theme.conf hyprlock-theme.conf" ["waybar"]="style.css" ["rofi"]="theme.rasi" ["kitty"]="theme.conf" ["wlogout"]="layout style.css" ["swaync"]="style.css" )
     # Note: nvim is NOT in SPECIAL_CONFIGS - it gets fully symlinked, and switch_theme.sh manages lua/theme.lua
 
-    for config_path in "$CONFIGS_DIR"/*; do
+    for config_path in "$CONFIGS_DIR"/*;
+    do
         config_name=$(basename "$config_path")
         
         # Skip tmux.conf as it needs special handling (home dir)
@@ -249,7 +268,8 @@ link_configs() {
             exclusions="${SPECIAL_CONFIGS[$config_name]}"
             
             # Loop through all files in the source config dir
-            for file_path in "$config_path"/*; do
+            for file_path in "$config_path"/*;
+            do
                 file_name=$(basename "$file_path")
                 
                 # Check if file is in exclusions list
@@ -312,6 +332,19 @@ setup_initial_theme() {
     fi
 }
 
+register_conda_kernels() {
+    log "Registering Conda Kernels..."
+    KERNEL_SCRIPT="$CONFIGS_DIR/hypr/scripts/refresh_conda_kernels.sh"
+    
+    if [ -f "$KERNEL_SCRIPT" ]; then
+        chmod +x "$KERNEL_SCRIPT"
+        # Run it. It internally checks for Conda existence.
+        "$KERNEL_SCRIPT" || warn "Conda kernel registration failed (Conda might not be installed)."
+    else
+        warn "refresh_conda_kernels.sh not found at $KERNEL_SCRIPT"
+    fi
+}
+
 # --- Main ---
 log "Starting installation..."
 
@@ -332,19 +365,6 @@ setup_node
 setup_cursor
 setup_neovim_venv
 
-register_conda_kernels() {
-    log "Registering Conda Kernels..."
-    KERNEL_SCRIPT="$CONFIGS_DIR/hypr/scripts/refresh_conda_kernels.sh"
-    
-    if [ -f "$KERNEL_SCRIPT" ]; then
-        chmod +x "$KERNEL_SCRIPT"
-        # Run it. It internally checks for Conda existence.
-        "$KERNEL_SCRIPT" || warn "Conda kernel registration failed (Conda might not be installed)."
-    else
-        warn "refresh_conda_kernels.sh not found at $KERNEL_SCRIPT"
-    fi
-}
-
 # 7. Register Conda Kernels (if Conda exists)
 register_conda_kernels
 
@@ -361,6 +381,7 @@ echo -e "${BLUE}Next steps:${NC}"
 echo "  1. Restart Hyprland or log out and back in"
 echo "  2. Open Neovim - plugins will auto-install on first launch"
 echo "  3. Run :Mason in Neovim to install LSP servers"
+echo "  4. Use <leader>mi to init Molten for Python dev"
 echo ""
 echo -e "${BLUE}Theme switching:${NC}"
 echo "  ~/.config/hypr/scripts/switch_theme.sh <theme-name>"

@@ -1,1 +1,1 @@
-/home/naveen/Downloads/my-hypr-setup/configs/hypr/themes/one-dark/nvim.lua
+/home/naveen/Downloads/my-hypr-setup/configs/hypr/themes/catppuccin-mocha/nvim.lua

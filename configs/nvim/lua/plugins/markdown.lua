@@ -14,7 +14,7 @@ return {
 		end,
 		init = function()
 			-- Auto-open preview when entering markdown file
-			vim.g.mkdp_auto_start = 1
+			vim.g.mkdp_auto_start = 0
 			-- Auto-close preview when leaving markdown file
 			vim.g.mkdp_auto_close = 1
 			-- Refresh preview on save and cursor move
@@ -22,7 +22,7 @@ return {
 			-- Only update preview on save (set to 1 for better performance)
 			vim.g.mkdp_refresh_slow = 0
 			-- Use custom browser (empty = default)
-			vim.g.mkdp_browser = ""
+			vim.g.mkdp_browser = "firefox"
 			-- Preview page title
 			vim.g.mkdp_page_title = "${name}"
 			-- Dark theme for preview
@@ -145,8 +145,10 @@ return {
 								.. vim.fn.shellescape(file)
 								.. " -o "
 								.. vim.fn.shellescape(output)
-								.. " && xdg-open "
+								.. " --pdf-engine=xelatex"
+								.. " && zathura "
 								.. vim.fn.shellescape(output)
+								.. " &"
 						)
 					end, { buffer = event.buf, desc = "Export to PDF & Open" })
 
