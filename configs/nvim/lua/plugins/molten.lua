@@ -48,6 +48,30 @@ return {
       vim.keymap.set("n", "<leader>mh", ":MoltenHideOutput<CR>", { desc = "Molten Hide Output", silent = true })
       vim.keymap.set("n", "<leader>mo", ":noautocmd MoltenEnterOutput<CR>", { desc = "Molten Enter Output", silent = true })
 
+      -- Select Cell Keymap
+      vim.keymap.set("n", "<leader>ms", function()
+        local ft = vim.bo.filetype
+        if ft == "markdown" or ft == "quarto" then
+          vim.cmd("normal! va`") 
+        else
+          vim.cmd("normal! vip")
+        end
+      end, { desc = "Molten Select Cell", silent = true })
+
+      -- Run Cell Keymap (Select + Run)
+      vim.keymap.set("n", "<leader>mc", function()
+        local ft = vim.bo.filetype
+        if ft == "markdown" or ft == "quarto" then
+          vim.cmd("normal! va`")
+        else
+          vim.cmd("normal! vip")
+        end
+        -- Run the visual selection
+        vim.cmd("MoltenEvaluateVisual")
+        -- Return to normal mode and clear selection
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+      end, { desc = "Molten Run Cell", silent = true })
+
       -- venv-selector integration for Molten
       -- This autocmd will run whenever the python path is updated by venv-selector
       vim.api.nvim_create_autocmd("User", {

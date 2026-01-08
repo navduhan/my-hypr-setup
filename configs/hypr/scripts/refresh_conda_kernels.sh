@@ -25,6 +25,9 @@ echo "Scanning Conda environments..."
 
 # We can iterate over the names.
 conda env list | grep -v "^#" | while read -r line; do
+    # Skip empty lines
+    if [ -z "$line" ]; then continue; fi
+
     # Split line into name and path
     # Example line: "base                 *  /home/naveen/miniconda3"
     # Example line: "myenv                   /home/naveen/miniconda3/envs/myenv"
@@ -33,16 +36,18 @@ conda env list | grep -v "^#" | while read -r line; do
     ENV_NAME=$(echo "$line" | awk '{print $1}')
     ENV_PATH=$(echo "$line" | awk '{print $NF}') # Last field is path
     
-    # If the line contains a '*', it's the active environment, ensuring we get the name right
-    if [[ "$line" == *"*"* ]]; then
-        # If it's the base env, sometimes it's listed weirdly, but usually just 'base'
-        # If name is empty (sometimes base is just path?), handle that
-        :
+    # If the first word IS the path (no name column), or usually active env marker
+    if [ -z "$ENV_NAME" ] || [ "$ENV_NAME" == "*" ]; then
+       # Try to deduce name from path
+       ENV_NAME=$(basename "$ENV_PATH")
     fi
 
-    # Skip if name is path (happens if unnamed env)
-    if [ "$ENV_NAME" == "$ENV_PATH" ]; then
-        ENV_NAME=$(basename "$ENV_PATH")
+    # Skip if still empty
+    if [ -z "$ENV_NAME" ]; then continue; fi
+
+    # Clean up name if it matches path accidentally or is just a path
+    if [[ "$ENV_NAME" == "/"* ]]; then
+        ENV_NAME=$(basename "$ENV_NAME")
     fi
 
     echo "------------------------------------------------"

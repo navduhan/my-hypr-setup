@@ -23,10 +23,6 @@ return {
 				-- Latex (Extras)
 				require("none-ls.formatting.latexindent"),
 
-				-- Python (Extras)
-				null_ls.builtins.formatting.black,
-				null_ls.builtins.formatting.isort,
-
 				-- Python Linting (Extras)
 				require("none-ls.diagnostics.flake8"),
 

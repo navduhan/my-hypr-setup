@@ -9,6 +9,7 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     lazy = true,
+    priority = 1000, -- Load first (default theme)
     opts = {
       flavour = "mocha",
       transparent_background = true,
@@ -89,7 +90,6 @@ return {
   {
     "navarasu/onedark.nvim",
     lazy = true,
-    priority = 1000,
     opts = {
       style = "dark",
       transparent = true,

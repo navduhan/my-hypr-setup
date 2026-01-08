@@ -108,6 +108,17 @@ install_packages() {
         dolphin # file manager
         adw-gtk-theme # libadwaita theme for gtk3
         gnome-themes-extra # extra gnome themes
+        sddm # login manager
+        sddm-theme-sugar-candy-git # sddm theme (AUR)
+        mpv # video player for camera testing
+        snapshot # modern camera app
+        
+        # Camera & Video
+        v4l-utils # video4linux utils
+        gst-plugins-good # gstreamer plugins
+        gst-plugins-bad # more gstreamer plugins
+        gst-plugin-pipewire # pipewire support for camera
+        libcamera # camera support library
 
         # System utilities
         blueman # bluetooth manager for SwayNC
@@ -120,6 +131,12 @@ install_packages() {
         fprintd # fingerprint scanner support
         cava # audio visualizer
         tmux # terminal multiplexer
+        yazi # terminal file manager
+        poppler # PDF preview (pdftoppm)
+        ffmpegthumbnailer # video thumbnails
+        unar # archive preview
+        zoxide # smarter cd
+        jq # json processor
 
         # Neovim & Dependencies
         neovim
@@ -134,6 +151,9 @@ install_packages() {
         stylua # lua formatter
         prettier # js/ts/css formatter
         shfmt # shell formatter
+        
+        # R Language
+        r
         
         # Markdown & PDF Tools
         pandoc # document converter (markdown -> pdf/docx)
@@ -162,21 +182,48 @@ setup_node() {
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    else
+        log "NVM already installed."
     fi
 
-    log "Installing Node LTS..."
-    nvm install --lts
-    nvm use --lts
-    nvm alias default lts/*
+    # Check if Node is installed
+    if command -v node &> /dev/null; then
+        log "Node.js $(node -v) is already installed."
+    else
+        log "Installing Node LTS..."
+        nvm install --lts
+        nvm use --lts
+        nvm alias default lts/*
+    fi
 
-    log "Installing global NPM packages..."
-    npm install -g neovim @google/gemini-cli
+    log "Checking global NPM packages..."
+    # Function to check and install global package
+    install_npm_global() {
+        PKG="$1"
+        if npm list -g "$PKG" --depth=0 &> /dev/null; then
+            log "  $PKG already installed."
+        else
+            log "  Installing $PKG..."
+            npm install -g "$PKG"
+        fi
+    }
+
+    install_npm_global "neovim"
+    install_npm_global "@google/gemini-cli"
+    
     success "Node setup complete"
 }
 
 setup_cursor() {
+    log "Checking for Cursor AI Editor/Agent..."
+    
+    # Robust check: Check for 'cursor' or 'cursor-agent' commands OR if the AppImage/Binary exists in common locations
+    if command -v cursor &> /dev/null || command -v cursor-agent &> /dev/null || [ -d "$HOME/.local/share/cursor" ] || [ -f "$HOME/Applications/cursor.AppImage" ]; then
+        log "Cursor/Agent is already installed. Skipping..."
+        return 0
+    fi
+
     log "Installing Cursor AI Editor..."
-    # User provided command: curl https://cursor.com/install -fsSL | bash
     if command -v curl &> /dev/null; then
         curl -fsSL https://cursor.com/install | bash
         success "Cursor installed"
@@ -218,7 +265,8 @@ setup_neovim_venv() {
         jupytext \
         pillow \
         black \
-        isort
+        isort \
+        radian
 
     success "Neovim venv setup complete"
 }
@@ -319,14 +367,14 @@ setup_tmux() {
 }
 
 setup_initial_theme() {
-    log "Setting up initial theme (One Dark)..."
+    log "Setting up initial theme (Catppuccin Mocha)..."
     
     # Use the switch script to set the initial theme
     # This creates the missing symlinks for theme.conf, style.css, etc.
     SWITCH_SCRIPT="$CONFIGS_DIR/hypr/scripts/switch_theme.sh"
     
     if [ -x "$SWITCH_SCRIPT" ]; then
-        "$SWITCH_SCRIPT" "one-dark"
+        "$SWITCH_SCRIPT" "catppuccin-mocha"
     else
         warn "Theme switch script not found or executable. You may need to set the theme manually."
     fi
@@ -343,6 +391,28 @@ register_conda_kernels() {
     else
         warn "refresh_conda_kernels.sh not found at $KERNEL_SCRIPT"
     fi
+}
+
+setup_sddm() {
+    log "Configuring SDDM with Sugar Candy theme..."
+    
+    # Create config directory if it doesn't exist
+    if [ ! -d "/etc/sddm.conf.d" ]; then
+        sudo mkdir -p "/etc/sddm.conf.d"
+    fi
+
+    # Set the theme
+    echo "[Theme]
+Current=sugar-candy
+" | sudo tee /etc/sddm.conf.d/theme.conf > /dev/null
+
+    # Enable SDDM service
+    if ! systemctl is-enabled sddm &> /dev/null; then
+        sudo systemctl enable sddm
+        log "Enabled sddm.service"
+    fi
+    
+    success "SDDM theme configured to Sugar Candy"
 }
 
 # --- Main ---
@@ -364,6 +434,9 @@ setup_tmux
 setup_node
 setup_cursor
 setup_neovim_venv
+
+# 6. SDDM Setup
+setup_sddm
 
 # 7. Register Conda Kernels (if Conda exists)
 register_conda_kernels
