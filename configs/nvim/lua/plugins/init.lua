@@ -25,4 +25,5 @@ return {
 	{ import = "plugins.persistence" },
 	{ import = "plugins.vimtex" },
 	{ import = "plugins.markdown" },
+	{ import = "plugins.opencode" },
 }

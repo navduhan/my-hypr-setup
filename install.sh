@@ -11,7 +11,7 @@ set -e
 # --- Configuration ---
 LOG_FILE="install.log"
 BACKUP_DIR="${HOME}/.config/hypr_backup_$(date +%Y%m%d_%H%M%S)"
-DOTFILES_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIGS_DIR="${DOTFILES_DIR}/configs"
 
 # --- Colors ---
@@ -23,396 +23,404 @@ NC='\033[0m'
 
 # --- Functions ---
 log() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-    echo "[INFO] $1" >> "$LOG_FILE"
+	echo -e "${BLUE}[INFO]${NC} $1"
+	echo "[INFO] $1" >>"$LOG_FILE"
 }
 
 success() {
-    echo -e "${GREEN}[OK]${NC} $1"
-    echo "[OK] $1" >> "$LOG_FILE"
+	echo -e "${GREEN}[OK]${NC} $1"
+	echo "[OK] $1" >>"$LOG_FILE"
 }
 
 error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-    echo "[ERROR] $1" >> "$LOG_FILE"
-    exit 1
+	echo -e "${RED}[ERROR]${NC} $1"
+	echo "[ERROR] $1" >>"$LOG_FILE"
+	exit 1
 }
 
 warn() {
-    echo -e "${YELLOW}[WARN]${NC} $1"
-    echo "[WARN] $1" >> "$LOG_FILE"
+	echo -e "${YELLOW}[WARN]${NC} $1"
+	echo "[WARN] $1" >>"$LOG_FILE"
 }
 
 check_aur_helper() {
-    if command -v yay &> /dev/null; then
-        echo "yay"
-    elif command -v paru &> /dev/null; then
-        echo "paru"
-    else
-        echo ""
-    fi
+	if command -v yay &>/dev/null; then
+		echo "yay"
+	elif command -v paru &>/dev/null; then
+		echo "paru"
+	else
+		echo ""
+	fi
 }
 
 install_packages() {
-    log "Checking for AUR helper..."
-    AUR_HELPER=$(check_aur_helper)
+	log "Checking for AUR helper..."
+	AUR_HELPER=$(check_aur_helper)
 
-    if [ -z "$AUR_HELPER" ]; then
-        warn "No AUR helper (yay/paru) found. Attempting to install yay..."
-        if ! command -v git &> /dev/null; then
-            sudo pacman -S --noconfirm git base-devel
-        fi
-        git clone https://aur.archlinux.org/yay.git /tmp/yay
-        (cd /tmp/yay && makepkg -si --noconfirm)
-        AUR_HELPER="yay"
-        rm -rf /tmp/yay
-    fi
+	if [ -z "$AUR_HELPER" ]; then
+		warn "No AUR helper (yay/paru) found. Attempting to install yay..."
+		if ! command -v git &>/dev/null; then
+			sudo pacman -S --noconfirm git base-devel
+		fi
+		git clone https://aur.archlinux.org/yay.git /tmp/yay
+		(cd /tmp/yay && makepkg -si --noconfirm)
+		AUR_HELPER="yay"
+		rm -rf /tmp/yay
+	fi
 
-    log "Using AUR helper: $AUR_HELPER"
+	log "Using AUR helper: $AUR_HELPER"
 
-    # List of packages to install
-    PACKAGES=(
-        # Hyprland & Core
-        hyprland
-        hyprlock
-        hypridle
-        hyprtoolkit
-        hyprgraphics
-        hyprland-guiutils
-        hyprwire
-        waybar
-        rofi-wayland
-        swaync
-        swww
-        kitty
-        dunst # optional backup
-        polkit-gnome
-        qt5-wayland
-        qt6-wayland
-        xdg-desktop-portal-hyprland
-        grim
-        slurp
-        wl-clipboard
-        wlogout
-        wlogout
-        hyprpicker # color picker
-        imagemagick # for image.nvim
-        quarto-cli-bin # for quarto-nvim (AUR)
+	# List of packages to install
+	PACKAGES=(
+		# Hyprland & Core
+		hyprland
+		hyprlock
+		hypridle
+		hyprtoolkit
+		hyprgraphics
+		hyprland-guiutils
+		hyprwire
+		waybar
+		rofi-wayland
+		swaync
+		swww
+		kitty
+		dunst # optional backup
+		polkit-gnome
+		qt5-wayland
+		qt6-wayland
+		xdg-desktop-portal-hyprland
+		grim
+		slurp
+		wl-clipboard
+		wlogout
+		wlogout
+		hyprpicker     # color picker
+		imagemagick    # for image.nvim
+		quarto-cli-bin # for quarto-nvim (AUR)
 
-        # Fonts
-        ttf-font-awesome
-        ttf-jetbrains-mono-nerd
-        noto-fonts-emoji
+		# Fonts
+		ttf-font-awesome
+		ttf-jetbrains-mono-nerd
+		noto-fonts-emoji
 
-        # Apps
-        dolphin # file manager
-        adw-gtk-theme # libadwaita theme for gtk3
-        gnome-themes-extra # extra gnome themes
-        sddm # login manager
-        sddm-theme-sugar-candy-git # sddm theme (AUR)
-        mpv # video player for camera testing
-        snapshot # modern camera app
-        
-        # Camera & Video
-        v4l-utils # video4linux utils
-        gst-plugins-good # gstreamer plugins
-        gst-plugins-bad # more gstreamer plugins
-        gst-plugin-pipewire # pipewire support for camera
-        libcamera # camera support library
+		# Apps
+		dolphin                    # file manager
+		adw-gtk-theme              # libadwaita theme for gtk3
+		gnome-themes-extra         # extra gnome themes
+		sddm                       # login manager
+		sddm-theme-sugar-candy-git # sddm theme (AUR)
+		mpv                        # video player for camera testing
+		snapshot                   # modern camera app
 
-        # System utilities
-        blueman # bluetooth manager for SwayNC
-        network-manager-applet # nm-connection-editor for SwayNC
-        libnotify # for notify-send
-        brightnessctl # for brightness keys
-        playerctl # for media keys
-        networkmanager
-        power-profiles-daemon
-        fprintd # fingerprint scanner support
-        cava # audio visualizer
-        tmux # terminal multiplexer
-        yazi # terminal file manager
-        poppler # PDF preview (pdftoppm)
-        ffmpegthumbnailer # video thumbnails
-        unar # archive preview
-        zoxide # smarter cd
-        jq # json processor
+		# Camera & Video
+		v4l-utils           # video4linux utils
+		gst-plugins-good    # gstreamer plugins
+		gst-plugins-bad     # more gstreamer plugins
+		gst-plugin-pipewire # pipewire support for camera
+		libcamera           # camera support library
 
-        # Neovim & Dependencies
-        neovim
-        lazygit # git TUI (for nvim toggleterm)
-        ripgrep # for telescope live_grep
-        fd # for telescope find_files
-        fzf # fuzzy finder
-        npm # for LSP servers
-        go # for go LSP
-        rust # for rust-analyzer
-        lua-language-server
-        stylua # lua formatter
-        prettier # js/ts/css formatter
-        shfmt # shell formatter
-        
-        # R Language
-        r
-        
-        # Markdown & PDF Tools
-        pandoc # document converter (markdown -> pdf/docx)
-        texlive-xetex # Required for pandoc PDF export with unicode support
-        texlive-latexextra # Often useful for additional latex packages
-    )
+		# System utilities
+		blueman                # bluetooth manager for SwayNC
+		network-manager-applet # nm-connection-editor for SwayNC
+		libnotify              # for notify-send
+		brightnessctl          # for brightness keys
+		playerctl              # for media keys
+		networkmanager
+		power-profiles-daemon
+		fprintd           # fingerprint scanner support
+		cava              # audio visualizer
+		tmux              # terminal multiplexer
+		yazi              # terminal file manager
+		poppler           # PDF preview (pdftoppm)
+		ffmpegthumbnailer # video thumbnails
+		unar              # archive preview
+		zoxide            # smarter cd
+		jq                # json processor
 
-    log "Installing packages..."
-    # --overwrite '*' helps handle file conflicts from old packages
-    $AUR_HELPER -S --needed --noconfirm --overwrite '*' "${PACKAGES[@]}"
+		# Neovim & Dependencies
+		neovim
+		lazygit # git TUI (for nvim toggleterm)
+		ripgrep # for telescope live_grep
+		fd      # for telescope find_files
+		fzf     # fuzzy finder
+		npm     # for LSP servers
+		go      # for go LSP
+		rust    # for rust-analyzer
+		lua-language-server
+		stylua   # lua formatter
+		prettier # js/ts/css formatter
+		shfmt    # shell formatter
+
+		# R Language
+		r
+
+		# Markdown & PDF Tools
+		pandoc             # document converter (markdown -> pdf/docx)
+		texlive-xetex      # Required for pandoc PDF export with unicode support
+		texlive-latexextra # Often useful for additional latex packages
+	)
+
+	log "Installing packages..."
+	# --overwrite '*' helps handle file conflicts from old packages
+	$AUR_HELPER -S --needed --noconfirm --overwrite '*' "${PACKAGES[@]}"
 }
 
 setup_node() {
-    log "Setting up Node.js via NVM..."
-    
-    # Check if NVM is installed
-    export NVM_DIR="$HOME/.nvm"
-    if [ -s "$NVM_DIR/nvm.sh" ]; then
-        . "$NVM_DIR/nvm.sh"
-    elif [ -s "/usr/share/nvm/init-nvm.sh" ]; then # Arch package location
-        . "/usr/share/nvm/init-nvm.sh"
-    fi
+	log "Setting up Node.js via NVM..."
 
-    if ! command -v nvm &> /dev/null; then
-        warn "NVM not found. Installing NVM..."
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    else
-        log "NVM already installed."
-    fi
+	# Check if NVM is installed
+	export NVM_DIR="$HOME/.nvm"
+	if [ -s "$NVM_DIR/nvm.sh" ]; then
+		. "$NVM_DIR/nvm.sh"
+	elif [ -s "/usr/share/nvm/init-nvm.sh" ]; then # Arch package location
+		. "/usr/share/nvm/init-nvm.sh"
+	fi
 
-    # Check if Node is installed
-    if command -v node &> /dev/null; then
-        log "Node.js $(node -v) is already installed."
-    else
-        log "Installing Node LTS..."
-        nvm install --lts
-        nvm use --lts
-        nvm alias default lts/*
-    fi
+	if ! command -v nvm &>/dev/null; then
+		warn "NVM not found. Installing NVM..."
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+		export NVM_DIR="$HOME/.nvm"
+		[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+	else
+		log "NVM already installed."
+	fi
 
-    log "Checking global NPM packages..."
-    # Function to check and install global package
-    install_npm_global() {
-        PKG="$1"
-        if npm list -g "$PKG" --depth=0 &> /dev/null; then
-            log "  $PKG already installed."
-        else
-            log "  Installing $PKG..."
-            npm install -g "$PKG"
-        fi
-    }
+	# Check if Node is installed
+	if command -v node &>/dev/null; then
+		log "Node.js $(node -v) is already installed."
+	else
+		log "Installing Node LTS..."
+		nvm install --lts
+		nvm use --lts
+		nvm alias default lts/*
+	fi
 
-    install_npm_global "neovim"
-    install_npm_global "@google/gemini-cli"
-    
-    success "Node setup complete"
+	log "Checking global NPM packages..."
+	# Function to check and install global package
+	install_npm_global() {
+		PKG="$1"
+		if npm list -g "$PKG" --depth=0 &>/dev/null; then
+			log "  $PKG already installed."
+		else
+			log "  Installing $PKG..."
+			npm install -g "$PKG"
+		fi
+	}
+
+	install_npm_global "neovim"
+	install_npm_global "@google/gemini-cli"
+
+	success "Node setup complete"
 }
 
 setup_cursor() {
-    log "Checking for Cursor AI Editor/Agent..."
-    
-    # Robust check: Check for 'cursor' or 'cursor-agent' commands OR if the AppImage/Binary exists in common locations
-    if command -v cursor &> /dev/null || command -v cursor-agent &> /dev/null || [ -d "$HOME/.local/share/cursor" ] || [ -f "$HOME/Applications/cursor.AppImage" ]; then
-        log "Cursor/Agent is already installed. Skipping..."
-        return 0
-    fi
+	log "Checking for Cursor AI Editor/Agent..."
 
-    log "Installing Cursor AI Editor..."
-    if command -v curl &> /dev/null; then
-        curl -fsSL https://cursor.com/install | bash
-        success "Cursor installed"
-    else
-        warn "curl not found, cannot install Cursor."
-    fi
+	# Robust check: Check for 'cursor' or 'cursor-agent' commands OR if the AppImage/Binary exists in common locations
+	if command -v cursor &>/dev/null || command -v cursor-agent &>/dev/null || [ -d "$HOME/.local/share/cursor" ] || [ -f "$HOME/Applications/cursor.AppImage" ]; then
+		log "Cursor/Agent is already installed. Skipping..."
+		return 0
+	fi
+
+	log "Installing Cursor AI Editor..."
+	if command -v curl &>/dev/null; then
+		curl -fsSL https://cursor.com/install | bash
+		success "Cursor installed"
+	else
+		warn "curl not found, cannot install Cursor."
+	fi
 }
 
 setup_neovim_venv() {
-    log "Setting up Neovim Python Virtual Environment..."
-    VENV_PATH="$HOME/.neovim-venv"
-    JUPYTER_RUNTIME="$HOME/.local/share/jupyter/runtime"
+	log "Setting up Neovim Python Virtual Environment..."
+	VENV_PATH="$HOME/.neovim-venv"
+	JUPYTER_RUNTIME="$HOME/.local/share/jupyter/runtime"
 
-    # Ensure Jupyter runtime directory exists (fixes Molten kernel issues)
-    if [ ! -d "$JUPYTER_RUNTIME" ]; then
-        log "Creating Jupyter runtime directory: $JUPYTER_RUNTIME"
-        mkdir -p "$JUPYTER_RUNTIME"
-        chmod 755 "$JUPYTER_RUNTIME"
-    fi
+	# Ensure Jupyter runtime directory exists (fixes Molten kernel issues)
+	if [ ! -d "$JUPYTER_RUNTIME" ]; then
+		log "Creating Jupyter runtime directory: $JUPYTER_RUNTIME"
+		mkdir -p "$JUPYTER_RUNTIME"
+		chmod 755 "$JUPYTER_RUNTIME"
+	fi
 
-    if [ ! -d "$VENV_PATH" ]; then
-        log "Creating virtual environment at $VENV_PATH..."
-        python3 -m venv "$VENV_PATH"
-    fi
+	# Check if venv exists and is valid (has working pip)
+	if [ -d "$VENV_PATH" ]; then
+		if ! "$VENV_PATH/bin/python" -c "import pip" 2>/dev/null; then
+			log "Existing venv is corrupted, recreating..."
+			rm -rf "$VENV_PATH"
+		fi
+	fi
 
-    log "Installing Python dependencies in venv..."
-    "$VENV_PATH/bin/pip" install --upgrade pip
-    # Core deps for Molten/Jupytext/Neovim
-    "$VENV_PATH/bin/pip" install --upgrade \
-        pynvim \
-        jupyter_client \
-        ipykernel \
-        cairosvg \
-        pnglatex \
-        plotly \
-        kaleido \
-        pyperclip \
-        nbformat \
-        jupytext \
-        pillow \
-        black \
-        isort \
-        radian
+	if [ ! -d "$VENV_PATH" ]; then
+		log "Creating virtual environment at $VENV_PATH..."
+		python3 -m venv "$VENV_PATH"
+	fi
 
-    success "Neovim venv setup complete"
+	# Ensure pip is installed and up to date
+	log "Installing Python dependencies in venv..."
+	"$VENV_PATH/bin/python" -m ensurepip --upgrade 2>/dev/null || true
+	"$VENV_PATH/bin/python" -m pip install --upgrade pip
+	# Core deps for Molten/Jupytext/Neovim
+	"$VENV_PATH/bin/python" -m pip install --upgrade \
+		pynvim \
+		jupyter_client \
+		ipykernel \
+		cairosvg \
+		pnglatex \
+		plotly \
+		kaleido \
+		pyperclip \
+		nbformat \
+		jupytext \
+		pillow \
+		black \
+		isort \
+		radian
+
+	success "Neovim venv setup complete"
 }
 
 backup_configs() {
-    log "Removing old backups..."
-    rm -rf "${HOME}/.config/hypr_backup_"*
-    success "Removed old backups"
+	log "Removing old backups..."
+	rm -rf "${HOME}/.config/hypr_backup_"*
+	success "Removed old backups"
 
-    log "Backing up existing configurations to $BACKUP_DIR..."
-    mkdir -p "$BACKUP_DIR"
+	log "Backing up existing configurations to $BACKUP_DIR..."
+	mkdir -p "$BACKUP_DIR"
 
-    for config in hypr waybar rofi swaync kitty wlogout nvim; do
-        if [ -d "${HOME}/.config/$config" ]; then
-            mv "${HOME}/.config/$config" "$BACKUP_DIR/"
-            success "Backed up $config"
-        fi
-    done
+	for config in hypr waybar rofi swaync kitty wlogout nvim; do
+		if [ -d "${HOME}/.config/$config" ]; then
+			mv "${HOME}/.config/$config" "$BACKUP_DIR/"
+			success "Backed up $config"
+		fi
+	done
 }
 
 link_configs() {
-    log "Linking new configurations..."
-    
-    # 1. Configs that need content symlinking with exclusions (for theme switching)
-    #    We do NOT want to symlink the folder itself, but its contents, ignoring specific files.
-    declare -A SPECIAL_CONFIGS
-    SPECIAL_CONFIGS=( ["hypr"]="theme.conf hyprlock-theme.conf" ["waybar"]="style.css" ["rofi"]="theme.rasi" ["kitty"]="theme.conf" ["wlogout"]="layout style.css" ["swaync"]="style.css" )
-    # Note: nvim is NOT in SPECIAL_CONFIGS - it gets fully symlinked, and switch_theme.sh manages lua/theme.lua
+	log "Linking new configurations..."
 
-    for config_path in "$CONFIGS_DIR"/*;
-    do
-        config_name=$(basename "$config_path")
-        
-        # Skip tmux.conf as it needs special handling (home dir)
-        if [ "$config_name" == "tmux.conf" ]; then
-            continue
-        fi
+	# 1. Configs that need content symlinking with exclusions (for theme switching)
+	#    We do NOT want to symlink the folder itself, but its contents, ignoring specific files.
+	declare -A SPECIAL_CONFIGS
+	SPECIAL_CONFIGS=(["hypr"]="theme.conf hyprlock-theme.conf" ["waybar"]="style.css" ["rofi"]="theme.rasi" ["kitty"]="theme.conf" ["wlogout"]="layout style.css" ["swaync"]="style.css")
+	# Note: nvim is NOT in SPECIAL_CONFIGS - it gets fully symlinked, and switch_theme.sh manages lua/theme.lua
 
-        target_dir="${HOME}/.config/$config_name"
+	for config_path in "$CONFIGS_DIR"/*; do
+		config_name=$(basename "$config_path")
 
-        # Check if it's a special config
-        if [[ -n "${SPECIAL_CONFIGS[$config_name]+_}" ]]; then
-            log "Processing special config: $config_name"
-            mkdir -p "$target_dir"
-            
-            # Get list of exclusions for this config
-            exclusions="${SPECIAL_CONFIGS[$config_name]}"
-            
-            # Loop through all files in the source config dir
-            for file_path in "$config_path"/*;
-            do
-                file_name=$(basename "$file_path")
-                
-                # Check if file is in exclusions list
-                if [[ " $exclusions " =~ " $file_name " ]]; then
-                    log "  Skipping swappable file: $file_name"
-                    continue
-                fi
-                
-                # Symlink the file/folder
-                ln -sf "$file_path" "$target_dir/$file_name"
-            done
-            success "Linked contents of $config_name (excluding: $exclusions)"
+		# Skip tmux.conf as it needs special handling (home dir)
+		if [ "$config_name" == "tmux.conf" ]; then
+			continue
+		fi
 
-        else
-            # 2. Standard Configs: Symlink the entire directory
-            # Remove existing dir if it's a directory or symlink
-            if [ -d "$target_dir" ] || [ -L "$target_dir" ]; then
-                rm -rf "$target_dir"
-            fi
-            
-            ln -sf "$config_path" "$target_dir"
-            success "Linked $config_name -> $target_dir"
-        fi
-    done
+		target_dir="${HOME}/.config/$config_name"
+
+		# Check if it's a special config
+		if [[ -n "${SPECIAL_CONFIGS[$config_name]+_}" ]]; then
+			log "Processing special config: $config_name"
+			mkdir -p "$target_dir"
+
+			# Get list of exclusions for this config
+			exclusions="${SPECIAL_CONFIGS[$config_name]}"
+
+			# Loop through all files in the source config dir
+			for file_path in "$config_path"/*; do
+				file_name=$(basename "$file_path")
+
+				# Check if file is in exclusions list
+				if [[ " $exclusions " =~ " $file_name " ]]; then
+					log "  Skipping swappable file: $file_name"
+					continue
+				fi
+
+				# Symlink the file/folder
+				ln -sf "$file_path" "$target_dir/$file_name"
+			done
+			success "Linked contents of $config_name (excluding: $exclusions)"
+
+		else
+			# 2. Standard Configs: Symlink the entire directory
+			# Remove existing dir if it's a directory or symlink
+			if [ -d "$target_dir" ] || [ -L "$target_dir" ]; then
+				rm -rf "$target_dir"
+			fi
+
+			ln -sf "$config_path" "$target_dir"
+			success "Linked $config_name -> $target_dir"
+		fi
+	done
 }
 
 setup_tmux() {
-    log "Setting up Tmux..."
+	log "Setting up Tmux..."
 
-    # 1. Link tmux.conf to home directory
-    if [ -f "$CONFIGS_DIR/tmux.conf" ]; then
-        ln -sf "$CONFIGS_DIR/tmux.conf" "${HOME}/.tmux.conf"
-        success "Linked configs/tmux.conf -> ~/.tmux.conf"
-    else
-        warn "configs/tmux.conf not found!"
-    fi
+	# 1. Link tmux.conf to home directory
+	if [ -f "$CONFIGS_DIR/tmux.conf" ]; then
+		ln -sf "$CONFIGS_DIR/tmux.conf" "${HOME}/.tmux.conf"
+		success "Linked configs/tmux.conf -> ~/.tmux.conf"
+	else
+		warn "configs/tmux.conf not found!"
+	fi
 
-    # 2. Install TPM (Tmux Plugin Manager)
-    TPM_DIR="${HOME}/.tmux/plugins/tpm"
-    if [ ! -d "$TPM_DIR" ]; then
-        log "Installing TPM..."
-        git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
-        success "Installed TPM to $TPM_DIR"
-    else
-        log "TPM already installed at $TPM_DIR"
-    fi
+	# 2. Install TPM (Tmux Plugin Manager)
+	TPM_DIR="${HOME}/.tmux/plugins/tpm"
+	if [ ! -d "$TPM_DIR" ]; then
+		log "Installing TPM..."
+		git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+		success "Installed TPM to $TPM_DIR"
+	else
+		log "TPM already installed at $TPM_DIR"
+	fi
 }
 
 setup_initial_theme() {
-    log "Setting up initial theme (Catppuccin Mocha)..."
-    
-    # Use the switch script to set the initial theme
-    # This creates the missing symlinks for theme.conf, style.css, etc.
-    SWITCH_SCRIPT="$CONFIGS_DIR/hypr/scripts/switch_theme.sh"
-    
-    if [ -x "$SWITCH_SCRIPT" ]; then
-        "$SWITCH_SCRIPT" "catppuccin-mocha"
-    else
-        warn "Theme switch script not found or executable. You may need to set the theme manually."
-    fi
+	log "Setting up initial theme (Catppuccin Mocha)..."
+
+	# Use the switch script to set the initial theme
+	# This creates the missing symlinks for theme.conf, style.css, etc.
+	SWITCH_SCRIPT="$CONFIGS_DIR/hypr/scripts/switch_theme.sh"
+
+	if [ -x "$SWITCH_SCRIPT" ]; then
+		"$SWITCH_SCRIPT" "catppuccin-mocha"
+	else
+		warn "Theme switch script not found or executable. You may need to set the theme manually."
+	fi
 }
 
 register_conda_kernels() {
-    log "Registering Conda Kernels..."
-    KERNEL_SCRIPT="$CONFIGS_DIR/hypr/scripts/refresh_conda_kernels.sh"
-    
-    if [ -f "$KERNEL_SCRIPT" ]; then
-        chmod +x "$KERNEL_SCRIPT"
-        # Run it. It internally checks for Conda existence.
-        "$KERNEL_SCRIPT" || warn "Conda kernel registration failed (Conda might not be installed)."
-    else
-        warn "refresh_conda_kernels.sh not found at $KERNEL_SCRIPT"
-    fi
+	log "Registering Conda Kernels..."
+	KERNEL_SCRIPT="$CONFIGS_DIR/hypr/scripts/refresh_conda_kernels.sh"
+
+	if [ -f "$KERNEL_SCRIPT" ]; then
+		chmod +x "$KERNEL_SCRIPT"
+		# Run it. It internally checks for Conda existence.
+		"$KERNEL_SCRIPT" || warn "Conda kernel registration failed (Conda might not be installed)."
+	else
+		warn "refresh_conda_kernels.sh not found at $KERNEL_SCRIPT"
+	fi
 }
 
 setup_sddm() {
-    log "Configuring SDDM with Sugar Candy theme..."
-    
-    # Create config directory if it doesn't exist
-    if [ ! -d "/etc/sddm.conf.d" ]; then
-        sudo mkdir -p "/etc/sddm.conf.d"
-    fi
+	log "Configuring SDDM with Sugar Candy theme..."
 
-    # Set the theme
-    echo "[Theme]
+	# Create config directory if it doesn't exist
+	if [ ! -d "/etc/sddm.conf.d" ]; then
+		sudo mkdir -p "/etc/sddm.conf.d"
+	fi
+
+	# Set the theme
+	echo "[Theme]
 Current=sugar-candy
-" | sudo tee /etc/sddm.conf.d/theme.conf > /dev/null
+" | sudo tee /etc/sddm.conf.d/theme.conf >/dev/null
 
-    # Enable SDDM service
-    if ! systemctl is-enabled sddm &> /dev/null; then
-        sudo systemctl enable sddm
-        log "Enabled sddm.service"
-    fi
-    
-    success "SDDM theme configured to Sugar Candy"
+	# Enable SDDM service
+	if ! systemctl is-enabled sddm &>/dev/null; then
+		sudo systemctl enable sddm
+		log "Enabled sddm.service"
+	fi
+
+	success "SDDM theme configured to Sugar Candy"
 }
 
 # --- Main ---

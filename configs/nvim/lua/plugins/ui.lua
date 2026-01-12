@@ -90,7 +90,23 @@ return {
           { "progress", separator = " ", padding = { left = 1, right = 0 } },
           { "location", padding = { left = 0, right = 1 } },
         },
-        lualine_z = { "encoding", "fileformat" },
+        lualine_z = {
+          {
+            function()
+              local ok, opencode = pcall(require, "opencode")
+              if ok and opencode.statusline then
+                return opencode.statusline()
+              end
+              return ""
+            end,
+            cond = function()
+              local ok, opencode = pcall(require, "opencode")
+              return ok and opencode.statusline ~= nil
+            end,
+          },
+          "encoding",
+          "fileformat",
+        },
       },
       extensions = { "neo-tree", "lazy", "toggleterm" },
     },
