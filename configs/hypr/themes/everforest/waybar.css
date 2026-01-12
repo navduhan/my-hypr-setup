@@ -85,6 +85,7 @@ window#waybar.hidden {
 #backlight,
 #network,
 #pulseaudio,
+#power-profiles-daemon,
 #custom-media,
 #tray,
 #mode,
@@ -96,7 +97,7 @@ window#waybar.hidden {
     color: @text;
     background-color: @base;
     border-radius: 10px;
-    margin: 5px 2px;
+    margin: 5px 4px;
 }
 
 #window,
@@ -155,6 +156,22 @@ label:focus {
 
 #pulseaudio.muted {
     color: @overlay0;
+}
+
+#power-profiles-daemon {
+    color: @blue;
+}
+
+#power-profiles-daemon.performance {
+    color: @red;
+}
+
+#power-profiles-daemon.balanced {
+    color: @blue;
+}
+
+#power-profiles-daemon.power-saver {
+    color: @green;
 }
 
 #tray {
