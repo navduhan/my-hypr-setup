@@ -91,6 +91,8 @@ window#waybar.hidden {
 #idle_inhibitor,
 #scratcher,
 #mpd,
+#mpris,
+#custom-spotify,
 #power-profiles-daemon,
 #custom-notification {
     padding: 0 10px;
@@ -173,6 +175,18 @@ label:focus {
 
 #pulseaudio.muted {
     color: @overlay0;
+}
+
+#mpris {
+    color: #1DB954;
+}
+
+#mpris.paused {
+    color: @overlay0;
+}
+
+#custom-spotify {
+    color: #1DB954;
 }
 
 #tray {

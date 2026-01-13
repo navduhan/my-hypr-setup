@@ -85,6 +85,8 @@ window#waybar.hidden {
 #backlight,
 #network,
 #pulseaudio,
+#mpris,
+#custom-spotify,
 #power-profiles-daemon,
 #custom-media,
 #tray,
@@ -172,6 +174,18 @@ label:focus {
 
 #power-profiles-daemon.power-saver {
     color: @green;
+}
+
+#mpris {
+    color: #1DB954;
+}
+
+#mpris.paused {
+    color: @overlay0;
+}
+
+#custom-spotify {
+    color: #1DB954;
 }
 
 #tray {
