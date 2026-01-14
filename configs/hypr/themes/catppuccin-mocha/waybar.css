@@ -193,3 +193,35 @@ label:focus {
 #tray {
     background-color: @base;
 }
+#custom-radio {
+    color: @green;
+}
+
+#custom-radio.on {
+    color: @green;
+}
+
+#custom-radio.off {
+    color: @overlay0;
+}
+
+#custom-separator {
+    color: @overlay0;
+    margin: 0 8px;
+}
+
+#custom-notification {
+    color: @text;
+}
+
+#custom-notification.notification {
+    color: @red;
+}
+
+#custom-notification.dnd {
+    color: @overlay0;
+}
+
+#custom-notification.dnd-notification {
+    color: @peach;
+}

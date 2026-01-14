@@ -8,14 +8,14 @@
     "margin-right": 10,
     "modules-left": [
         "clock",
-        "hyprland/workspaces",
-        "custom/spotify"
+        "hyprland/workspaces"
     ],
     "modules-center": [
-        "mpris",
         "hyprland/window"
     ],
     "modules-right": [
+        "custom/radio",
+        "custom/separator",
         "network",
         "power-profiles-daemon",
         "pulseaudio",
@@ -59,17 +59,6 @@
             "on-click-backward": "tz_down",
             "on-scroll-up": "shift_up",
             "on-scroll-down": "shift_down"
-        }
-    },
-    "power-profiles-daemon": {
-        "format": "{icon}",
-        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-        "tooltip": true,
-        "format-icons": {
-            "default": "",
-            "performance": "",
-            "balanced": "",
-            "power-saver": ""
         }
     },
     "battery": {
@@ -123,13 +112,13 @@
         "tooltip": false,
         "format": "{icon}",
         "format-icons": {
-            "notification": "<span foreground='red'><sup></sup></span>",
+            "notification": "<span foreground='red'><sup></sup></span>",
             "none": "",
-            "dnd-notification": "<span foreground='red'><sup></sup></span>",
+            "dnd-notification": "<span foreground='red'><sup></sup></span>",
             "dnd-none": "",
-            "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+            "inhibited-notification": "<span foreground='red'><sup></sup></span>",
             "inhibited-none": "",
-            "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+            "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
             "dnd-inhibited-none": ""
         },
         "return-type": "json",
@@ -139,32 +128,27 @@
         "on-click-right": "swaync-client -d -sw",
         "escape": true
     },
-    "mpris": {
-        "format": "{player_icon}  {artist} - {title}",
-        "format-paused": "{player_icon}  {status_icon}  {artist} - {title}",
-        "player-icons": {
-            "spotify": "",
-            "spotify_player": "",
-            "firefox": "",
-            "chromium": "",
-            "default": ""
-        },
-        "status-icons": {
-            "paused": "",
-            "playing": ""
-        },
-        "max-length": 40,
-        "interval": 1,
-        "on-click": "playerctl play-pause",
-        "on-click-right": "foot -e spotify_player",
-        "on-scroll-up": "playerctl next",
-        "on-scroll-down": "playerctl previous"
+    "custom/radio": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 2,
+        "exec": "~/.config/hypr/scripts/radio-status.sh",
+        "on-click": "~/.config/hypr/scripts/radio-toggle.sh"
     },
-    "custom/spotify": {
-        "format": "",
+    "custom/separator": {
+        "format": "|",
+        "interval": "once",
+        "tooltip": false
+    },
+    "power-profiles-daemon": {
+        "format": "{icon}",
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
         "tooltip": true,
-        "tooltip-format": "Spotify Menu",
-        "on-click": "~/.config/hypr/scripts/spotify-menu.sh",
-        "on-click-right": "foot -e spotify_player"
+        "format-icons": {
+            "default": "",
+            "performance": "",
+            "balanced": "",
+            "power-saver": ""
+        }
     }
 }

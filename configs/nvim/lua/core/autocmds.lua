@@ -44,3 +44,17 @@ vim.api.nvim_create_autocmd("VimResized", {
     vim.cmd("tabdo wincmd =")
   end,
 })
+
+-- Fix for FUSE/rclone mounted filesystems (warehouse, innovator_scratch)
+-- Prevents "file is not writable" warnings on FUSE mounts
+vim.api.nvim_create_autocmd("BufRead", {
+  group = augroup("fuse_mounts"),
+  pattern = {
+    vim.fn.expand("~") .. "/warehouse/*",
+    vim.fn.expand("~") .. "/innovator_scratch/*",
+  },
+  callback = function()
+    vim.bo.modifiable = true
+    vim.bo.readonly = false
+  end,
+})
