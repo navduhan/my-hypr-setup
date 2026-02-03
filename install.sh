@@ -90,6 +90,7 @@ install_packages() {
 		qt5-wayland
 		qt6-wayland
 		xdg-desktop-portal-hyprland
+		xdg-desktop-portal-gtk     # required for GTK app settings
 		grim
 		slurp
 		wl-clipboard
@@ -105,7 +106,9 @@ install_packages() {
 		noto-fonts-emoji
 
 		# Apps
-		dolphin                    # file manager
+		nautilus                   # file manager
+		tinysparql                 # tracker3 (required for nautilus)
+		localsearch                # tracker3-miners (required for nautilus)
 		adw-gtk-theme              # libadwaita theme for gtk3
 		gnome-themes-extra         # extra gnome themes
 		sddm                       # login manager

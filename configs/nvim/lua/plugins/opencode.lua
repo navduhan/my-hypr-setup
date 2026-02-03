@@ -6,6 +6,7 @@
 return {
     {
         "NickvanDyke/opencode.nvim",
+        branch = "main", -- Use main branch for latest updates
         dependencies = {
             -- Required for ask() and select()
             { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
@@ -33,20 +34,20 @@ return {
             -- Required for opts.events.reload (auto-reload buffers when opencode edits files)
             vim.o.autoread = true
 
-            -- Keymaps for opencode using <leader>o prefix
+            -- Keymaps: <leader>o + one letter = 3 keys total (e.g. space-o-l for "add line")
+            -- Avoid <leader>ot so typing "other" doesn't trigger; use "e" for toggle (open/engage)
             vim.keymap.set({ "n", "x" }, "<leader>oa", function()
                 require("opencode").ask("@this: ", { submit = true })
             end, { desc = "Ask opencode" })
 
             vim.keymap.set({ "n", "x" }, "<leader>oc", function()
                 require("opencode").select()
-            end, { desc = "Execute opencode command" })
+            end, { desc = "Opencode command" })
 
-            vim.keymap.set({ "n", "t" }, "<leader>ot", function()
+            vim.keymap.set({ "n", "t" }, "<leader>oe", function()
                 require("opencode").toggle()
             end, { desc = "Toggle opencode" })
 
-            -- Operator keymaps for adding ranges to opencode
             vim.keymap.set({ "n", "x" }, "<leader>or", function()
                 return require("opencode").operator("@this ")
             end, { expr = true, desc = "Add range to opencode" })
@@ -55,7 +56,6 @@ return {
                 return require("opencode").operator("@this ") .. "_"
             end, { expr = true, desc = "Add line to opencode" })
 
-            -- Scroll opencode conversation
             vim.keymap.set("n", "<leader>ou", function()
                 require("opencode").command("session.half.page.up")
             end, { desc = "Opencode scroll up" })
@@ -63,6 +63,10 @@ return {
             vim.keymap.set("n", "<leader>od", function()
                 require("opencode").command("session.half.page.down")
             end, { desc = "Opencode scroll down" })
+
+            vim.keymap.set("n", "<leader>os", function()
+                require("opencode").select_session()
+            end, { desc = "Select opencode session" })
         end,
     },
 }

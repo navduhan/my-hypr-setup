@@ -1,14 +1,15 @@
 -- =============================================================================
 -- File: plugins/copilot.lua
 -- Description: Github Copilot configuration (using copilot.vim)
+-- If suggestions never appear, run :Copilot auth to sign in.
 -- =============================================================================
 
 return {
   -- Copilot Core (Vim version)
   {
     "github/copilot.vim",
-    cmd = "Copilot",
-    event = "InsertEnter",
+    -- Load at startup so the Copilot agent can connect; avoids delay on first insert
+    lazy = false,
     init = function()
       -- For copilot.vim, we use global variables for configuration
       -- These should be set before the plugin is loaded, so we use 'init'
@@ -23,10 +24,24 @@ return {
         svn = false,
         cvs = false,
         ["."] = false,
+        ["tex"] = true,
       }
+
+      -- Force enable copilot for specific filetypes
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "tex", "plaintex" },
+        callback = function()
+          vim.b.copilot_enabled = true
+        end,
+      })
     end,
     config = function()
-      vim.api.nvim_set_keymap("i", "<C-f>", 'copilot#Accept("<CR>")', { silent = true, expr = true, replace_keycodes = false })
+      -- Use \\<CR> per copilot.vim docs so Accept receives the correct key
+      vim.keymap.set("i", "<C-f>", 'copilot#Accept("\\<CR>")', {
+        silent = true,
+        expr = true,
+        replace_keycodes = false,
+      })
     end,
   },
 
